@@ -1,47 +1,101 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.0.2'
-	id 'io.spring.dependency-management' version '1.1.0'
-	id 'org.hibernate.orm' version '6.1.6.Final'
-	id 'org.graalvm.buildtools.native' version '0.9.18'
+    id 'org.springframework.boot' version "${spring_boot_version}"
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.graalvm.buildtools.native' version "${graalvm_version}"
+    id 'org.jetbrains.kotlin.plugin.spring' version "${kotlin_version}"
+    id 'org.jetbrains.kotlin.plugin.jpa' version "${kotlin_version}"
+    id "org.jetbrains.kotlin.jvm" version "${kotlin_version}"
+    id 'idea' // Download sources
 }
 
 group = 'de.dhbw'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+version '1.0-SNAPSHOT'
+sourceCompatibility = "$jvm_version"
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    // database
+    implementation 'com.h2database:h2:2.1.214'
+
+    // swagger
+    implementation "org.springdoc:springdoc-openapi-ui:${springdoc_version}"
+    implementation "org.springdoc:springdoc-openapi-webmvc-core:${springdoc_version}"
+    implementation "org.springdoc:springdoc-openapi-kotlin:${springdoc_version}"
+
+    // testing
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}"
+    testImplementation "org.codehaus.groovy:groovy-all:${groovy_version}"
+    testImplementation "org.spockframework:spock-core:${spock_version}"
+    testImplementation "io.mockk:mockk:${mockk_version}"
+    testImplementation "org.amshove.kluent:kluent:${kluent_version}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // logging
+    implementation("org.apache.logging.log4j:log4j-core:${log4j2_version}")
+    runtimeOnly "org.apache.logging.log4j:log4j-api:${log4j2_version}"
+    runtimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2_version}"
+
+}
+
+
+// Log4j2
+configurations.all {
+    exclude group: 'ch.qos.logback'
+    exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
-hibernate {
-	enhancement {
-		lazyInitialization true
-		dirtyTracking true
-		associationManagement true
-	}
+//compileKotlin {
+//	compilerOptions.freeCompilerArgs.add('-Xjsr305=strict')
+//	compilerOptions.jvmTarget = "$jvm_version"
+//}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "$jvm_version"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "$jvm_version"
 }
 
+idea { // Download sources
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+wrapper {
+    gradleVersion = '7.6'
+    distributionType = 'BIN'
+}
