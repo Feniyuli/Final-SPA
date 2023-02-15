@@ -45,7 +45,7 @@ class RestaurantController(private val restaurantService: RestaurantService) {
     @PostMapping
     fun createRestaurant(@RequestBody newRestaurant: Restaurant): ResponseEntity<Restaurant> {
         val restaurant = newRestaurant.copy(id = UUID.randomUUID())
-        val result = restaurantService.createOrUpdateRestaurant(restaurant)
+        val result = restaurantService.createOrUpdate(restaurant)
         log.info("Created restaurant $result")
         return ResponseEntity(result, HttpStatus.CREATED)
     }
@@ -53,13 +53,13 @@ class RestaurantController(private val restaurantService: RestaurantService) {
     @PutMapping("/{id}")
     fun updateRestaurant(@PathVariable id: UUID, @RequestBody restaurant: Restaurant): ResponseEntity<Restaurant> {
         val updateRestaurant = restaurant.copy(id = id)
-        val result = restaurantService.createOrUpdateRestaurant(updateRestaurant)
+        val result = restaurantService.createOrUpdate(updateRestaurant)
         log.info("Created restaurant $result")
         return ResponseEntity(result, HttpStatus.OK)
     }
 
     @DeleteMapping("/{id}")
     fun deleteRestaurant(@PathVariable id: UUID) {
-        restaurantService.deleteRestaurant(id)
+        restaurantService.delete(id)
     }
 }

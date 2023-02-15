@@ -6,7 +6,7 @@ import java.util.*
 import javax.persistence.EntityNotFoundException
 
 /**
- * The RestaurantService contains the operations that should be etue
+ * The RestaurantService contains the operations related to managing Restaurants.
  */
 @Service
 class RestaurantService(private val restaurantRepository: RestaurantRepository) {
@@ -23,12 +23,12 @@ class RestaurantService(private val restaurantRepository: RestaurantRepository) 
         return restaurantRepository.findAll().toList()
     }
 
-    fun createOrUpdateRestaurant(restaurant: Restaurant): Restaurant {
+    fun createOrUpdate(restaurant: Restaurant): Restaurant {
         log.info("Save or update restaurant ${restaurant}")
         return restaurantRepository.save(restaurant)
     }
 
-    fun deleteRestaurant(id: UUID) {
+    fun delete(id: UUID) {
         log.info("Deleting restaurant with id ${id}")
         restaurantRepository.deleteById(id)
     }
