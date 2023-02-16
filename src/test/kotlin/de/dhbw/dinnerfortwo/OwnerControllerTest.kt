@@ -16,12 +16,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.web.context.WebApplicationContext
-import javax.transaction.Transactional
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
 
     @Autowired
@@ -29,9 +26,6 @@ class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
-
-    @Autowired
-    private lateinit var webApplicationContext: WebApplicationContext
 
     @BeforeEach()
     fun setup() {
@@ -84,7 +78,7 @@ class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
         val storedOwner = newOwner()
         val entity = repository.save(storedOwner)
 
-        val update = Owner(storedOwner.id, storedOwner.name, storedOwner.address, storedOwner.email)
+        val update = OwnerController.OwnerDTO(storedOwner.name, storedOwner.address, storedOwner.email)
         val request = put("${OwnerController.URI_OWNER_BASE}/${entity.id}")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(update))

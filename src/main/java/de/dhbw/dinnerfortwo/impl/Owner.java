@@ -10,7 +10,7 @@ import java.util.UUID;
 public class Owner {
     @Id
     //    @GeneratedValue
-    private UUID id;
+    private String id;
 
     @Column(nullable = false)
     private String name;
@@ -22,20 +22,20 @@ public class Owner {
     private String email;
 
     public Owner(String name, String address, String email) {
-        this(UUID.randomUUID(), name, address, email);
+        this(UUID.randomUUID().toString(), name, address, email);
     }
 
     public Owner() {
     }
 
-    public Owner(UUID id, String name, String address, String email) {
+    public Owner(String id, String name, String address, String email) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -51,7 +51,7 @@ public class Owner {
         return email;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

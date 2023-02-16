@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.Column;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +32,7 @@ import static de.dhbw.dinnerfortwo.api.OwnerController.URI_OWNER_BASE;
 public class OwnerController {
 
     public static final String URI_OWNER_BASE = URI_BASE + "/owners";
-    ;
+
     private final OwnerService ownerService;
 
     public OwnerController(OwnerService ownerService) {
@@ -59,9 +60,9 @@ public class OwnerController {
     }
 
     @PostMapping
-    public ResponseEntity<Owner> createOwner(@RequestBody Owner newOwner) {
+    public ResponseEntity<Owner> createOwner(@RequestBody OwnerDTO newOwner) {
         Owner owner = new Owner(newOwner.getName(), newOwner.getAddress(), newOwner.getEmail()); // enforce a new ID
-        Owner result = ownerService.createOrUpdate(owner);
+        Owner result = ownerService.create(owner);
         log.info("Created owner {}", result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -70,15 +71,69 @@ public class OwnerController {
      * Update existing owner, with a given ID.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Owner> updateOwner(@PathVariable UUID id, @RequestBody Owner owner) {
-        Owner updateOwner = new Owner(owner.getName(), owner.getAddress(), owner.getEmail()); // enforce the id of the parameter ID
-        Owner result = ownerService.createOrUpdate(updateOwner);
-        log.info("updated owner {}", result);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<HttpStatus> updateOwner(@PathVariable UUID id, @RequestBody OwnerDTO owner) {
+        Owner updateOwner = new Owner(id.toString(), owner.getName(), owner.getAddress(), owner.getEmail()); // enforce the id of the parameter ID
+        ownerService.update(updateOwner);
+        log.info("updated owner {}", updateOwner);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public void deleteOwner(@PathVariable UUID id) {
         ownerService.delete(id);
+    }
+
+    public static class OwnerDTO {
+        @Column(nullable = false)
+        private String name;
+
+        @Column(nullable = false)
+        private String address;
+
+        @Column(nullable = false)
+        private String email;
+
+        public OwnerDTO() {
+        }
+
+        public OwnerDTO(String name, String address, String email) {
+            this.name = name;
+            this.address = address;
+            this.email = email;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+
+        @Override
+        public String toString() {
+            return "Owner{" +
+                    "name='" + name + '\'' +
+                    ", adress='" + address + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
     }
 }

@@ -1,4 +1,4 @@
-package de.dhbw.dinnerfortwo.impl
+package de.dhbw.dinnerfortwo.config
 
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI

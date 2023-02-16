@@ -9,8 +9,8 @@ import javax.persistence.Id
 @Entity
 data class Restaurant(
     @Id
-//    @GeneratedValue
-    val id: UUID = UUID.randomUUID(),
+//    @GeneratedValue // Auto generated IDs are contradictionary to functional programming. Better control the id yourself
+    val id: String = UUID.randomUUID().toString(),
 
     @Column(nullable = false)
     val name: String,

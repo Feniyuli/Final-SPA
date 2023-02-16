@@ -8,6 +8,7 @@ class DinnerForTwoApplicationTests {
 
     @Test
     fun contextLoads() {
+        // simply test that the application is configured correctly
     }
 
 }

@@ -43,23 +43,29 @@ class RestaurantController(private val restaurantService: RestaurantService) {
     }
 
     @PostMapping
-    fun createRestaurant(@RequestBody newRestaurant: Restaurant): ResponseEntity<Restaurant> {
-        val restaurant = newRestaurant.copy(id = UUID.randomUUID())
-        val result = restaurantService.createOrUpdate(restaurant)
+    fun createRestaurant(@RequestBody r: RestaurntNoIdDTO): ResponseEntity<Restaurant> {
+        val result =
+            restaurantService.create(Restaurant(name = r.name, cuisine = r.cuisine, email = r.email, rating = r.rating))
         log.info("Created restaurant $result")
         return ResponseEntity(result, HttpStatus.CREATED)
     }
 
     @PutMapping("/{id}")
-    fun updateRestaurant(@PathVariable id: UUID, @RequestBody restaurant: Restaurant): ResponseEntity<Restaurant> {
-        val updateRestaurant = restaurant.copy(id = id)
-        val result = restaurantService.createOrUpdate(updateRestaurant)
-        log.info("Created restaurant $result")
-        return ResponseEntity(result, HttpStatus.OK)
+    fun updateRestaurant(@PathVariable id: UUID, @RequestBody r: RestaurntNoIdDTO): ResponseEntity<HttpStatus> {
+        log.info("Updating restaurant with id ${id}")
+        try {
+            val result = restaurantService.update(Restaurant(id.toString(), r.name, r.cuisine, r.email, r.rating))
+            log.info("Created restaurant $result")
+            return ResponseEntity(HttpStatus.OK)
+        } catch (e: EntityNotFoundException) {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
     }
 
     @DeleteMapping("/{id}")
     fun deleteRestaurant(@PathVariable id: UUID) {
         restaurantService.delete(id)
     }
+
+    data class RestaurntNoIdDTO(val name: String, val cuisine: String, val email: String, val rating: Double)
 }
