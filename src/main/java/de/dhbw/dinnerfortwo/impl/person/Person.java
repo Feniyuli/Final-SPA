@@ -1,4 +1,4 @@
-package de.dhbw.dinnerfortwo.impl;
+package de.dhbw.dinnerfortwo.impl.person;
 
 
 import javax.persistence.Column;
@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.util.UUID;
 
 @Entity
-public class Owner {
+public class Person {
     @Id
     //    @GeneratedValue
     private String id;
@@ -21,18 +21,22 @@ public class Owner {
     @Column(nullable = false)
     private String email;
 
-    public Owner(String name, String address, String email) {
-        this(UUID.randomUUID().toString(), name, address, email);
+    @Column(nullable = false)
+    private Type type;
+
+    public Person(String name, String address, String email, Type type) {
+        this(UUID.randomUUID().toString(), name, address, email, type);
     }
 
-    public Owner() {
+    public Person() {
     }
 
-    public Owner(String id, String name, String address, String email) {
+    public Person(String id, String name, String address, String email, Type type) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
+        this.type = type;
     }
 
     public String getId() {
@@ -67,15 +71,23 @@ public class Owner {
         this.email = email;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     // equals and hash code must be based on the ID for JPA to work well.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Owner owner = (Owner) o;
+        Person person = (Person) o;
 
-        return id.equals(owner.id);
+        return id.equals(person.id);
     }
 
     // equals and hash code must be based on the ID for JPA to work well.
@@ -86,7 +98,7 @@ public class Owner {
 
     @Override
     public String toString() {
-        return "Owner{" +
+        return "Person{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", adress='" + address + '\'' +

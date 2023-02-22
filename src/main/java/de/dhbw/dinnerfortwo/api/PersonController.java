@@ -1,7 +1,8 @@
 package de.dhbw.dinnerfortwo.api;
 
-import de.dhbw.dinnerfortwo.impl.Owner;
-import de.dhbw.dinnerfortwo.impl.OwnerService;
+import de.dhbw.dinnerfortwo.impl.person.Person;
+import de.dhbw.dinnerfortwo.impl.person.PersonService;
+import de.dhbw.dinnerfortwo.impl.person.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
-import static de.dhbw.dinnerfortwo.api.OwnerController.URI_OWNER_BASE;
+import static de.dhbw.dinnerfortwo.api.PersonController.URI_OWNER_BASE;
 
 /**
  * REST (HTTP) API of the Dinner app to interact with the UI or external applications.
@@ -29,61 +30,61 @@ import static de.dhbw.dinnerfortwo.api.OwnerController.URI_OWNER_BASE;
  */
 @RestController
 @RequestMapping(value = URI_OWNER_BASE, produces = "application/json;charset=UTF-8")
-public class OwnerController {
+public class PersonController {
 
-    public static final String URI_OWNER_BASE = URI_BASE + "/owners";
+    public static final String URI_OWNER_BASE = URI_BASE + "/persons";
 
-    private final OwnerService ownerService;
+    private final PersonService personService;
 
-    public OwnerController(OwnerService ownerService) {
-        this.ownerService = ownerService;
+    public PersonController(PersonService personService) {
+        this.personService = personService;
     }
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/{id}")
-    public ResponseEntity<Owner> getOwner(@PathVariable UUID id) {
-        log.info("Get owner with id {}", id);
+    public ResponseEntity<Person> getPerson(@PathVariable UUID id) {
+        log.info("Get person with id {}", id);
         try {
-            var owner = ownerService.getOwner(id);
-            return ResponseEntity.ok(owner);
+            var person = personService.getPerson(id);
+            return ResponseEntity.ok(person);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<Owner>> getAllOwners() {
-        log.info("Get all owners");
-        var result = ownerService.getAllOwners();
+    public ResponseEntity<List<Person>> getAllPersons() {
+        log.info("Get all persons");
+        var result = personService.getAllPersons();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Owner> createOwner(@RequestBody OwnerDTO newOwner) {
-        Owner owner = new Owner(newOwner.getName(), newOwner.getAddress(), newOwner.getEmail()); // enforce a new ID
-        Owner result = ownerService.create(owner);
-        log.info("Created owner {}", result);
+    public ResponseEntity<Person> createPerson(@RequestBody PersonDTO newPerson) {
+        Person person = new Person(newPerson.getName(), newPerson.getAddress(), newPerson.getEmail(), newPerson.getType()); // enforce a new ID
+        Person result = personService.create(person);
+        log.info("Created person {}", result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     /**
-     * Update existing owner, with a given ID.
+     * Update existing person, with a given ID.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateOwner(@PathVariable UUID id, @RequestBody OwnerDTO owner) {
-        Owner updateOwner = new Owner(id.toString(), owner.getName(), owner.getAddress(), owner.getEmail()); // enforce the id of the parameter ID
-        ownerService.update(updateOwner);
-        log.info("updated owner {}", updateOwner);
+    public ResponseEntity<HttpStatus> updatePerson(@PathVariable UUID id, @RequestBody PersonDTO person) {
+        Person updatePerson = new Person(id.toString(), person.getName(), person.getAddress(), person.getEmail(), person.getType()); // enforce the id of the parameter ID
+        personService.update(updatePerson);
+        log.info("updated person {}", updatePerson);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOwner(@PathVariable UUID id) {
-        ownerService.delete(id);
+    public void deletePerson(@PathVariable UUID id) {
+        personService.delete(id);
     }
 
-    public static class OwnerDTO {
+    public static class PersonDTO {
         @Column(nullable = false)
         private String name;
 
@@ -93,13 +94,17 @@ public class OwnerController {
         @Column(nullable = false)
         private String email;
 
-        public OwnerDTO() {
+        @Column(nullable = false)
+        private Type type;
+
+        public PersonDTO() {
         }
 
-        public OwnerDTO(String name, String address, String email) {
+        public PersonDTO(String name, String address, String email, Type type) {
             this.name = name;
             this.address = address;
             this.email = email;
+            this.type = type;
         }
 
         public String getName() {
@@ -126,13 +131,21 @@ public class OwnerController {
             this.email = email;
         }
 
+        public Type getType() {
+            return type;
+        }
+
+        public void setType(Type type) {
+            this.type = type;
+        }
 
         @Override
         public String toString() {
-            return "Owner{" +
+            return "Person{" +
                     "name='" + name + '\'' +
                     ", adress='" + address + '\'' +
                     ", email='" + email + '\'' +
+                    ", Type='" + type + '\'' +
                     '}';
         }
     }
