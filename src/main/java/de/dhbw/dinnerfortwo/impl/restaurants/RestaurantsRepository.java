@@ -1,4 +1,4 @@
-package de.dhbw.dinnerfortwo.impl;
+package de.dhbw.dinnerfortwo.impl.restaurants;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * The default JpaRepository provides already all basic CRUD operations like reading or storing an entity.
  */
 @Repository
-public interface OwnerRepository extends JpaRepository<Owner, String> {
+public interface RestaurantsRepository extends JpaRepository<Restaurants, String> {
 }

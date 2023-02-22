@@ -1,9 +1,10 @@
 package de.dhbw.dinnerfortwo
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import de.dhbw.dinnerfortwo.api.OwnerController
-import de.dhbw.dinnerfortwo.impl.Owner
-import de.dhbw.dinnerfortwo.impl.OwnerRepository
+import de.dhbw.dinnerfortwo.api.PersonController
+import de.dhbw.dinnerfortwo.impl.person.Person
+import de.dhbw.dinnerfortwo.impl.person.PersonRepository
+import de.dhbw.dinnerfortwo.impl.person.Type
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
+class PersonControllerTest(@Autowired val repository: PersonRepository) {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -37,7 +38,7 @@ class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
     fun `test rest end point to create a new Owners`() {
         // prepare test
         val Owner = newOwner()
-        val request = post(OwnerController.URI_OWNER_BASE)
+        val request = post(PersonController.URI_OWNER_BASE)
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(Owner))
 
@@ -60,16 +61,16 @@ class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
         val entity = repository.save(storedOwner)
 
         // execute function under test
-        val request = get("${OwnerController.URI_OWNER_BASE}/${entity.id}")
+        val request = get("${PersonController.URI_OWNER_BASE}/${entity.id}")
             .contentType("application/json")
         val result = mockMvc.perform(request)
             .andExpect(status().isOk)
             .andReturn()
 
         // evaluate result
-        val resultOwner = objectMapper.readValue(result.response.contentAsString, Owner::class.java)
-        resultOwner.name `should be equal to` "Bella Italia"
-        resultOwner.email `should be equal to` "info@bella.com"
+        val resultPerson = objectMapper.readValue(result.response.contentAsString, Person::class.java)
+        resultPerson.name `should be equal to` "Bella Italia"
+        resultPerson.email `should be equal to` "info@bella.com"
     }
 
     @Test
@@ -78,8 +79,13 @@ class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
         val storedOwner = newOwner()
         val entity = repository.save(storedOwner)
 
-        val update = OwnerController.OwnerDTO(storedOwner.name, storedOwner.address, storedOwner.email)
-        val request = put("${OwnerController.URI_OWNER_BASE}/${entity.id}")
+        val update = PersonController.PersonDTO(
+            storedOwner.name,
+            storedOwner.address,
+            storedOwner.email,
+            storedOwner.type
+        )
+        val request = put("${PersonController.URI_OWNER_BASE}/${entity.id}")
             .contentType("application/json")
             .content(objectMapper.writeValueAsString(update))
         mockMvc
@@ -100,7 +106,7 @@ class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
         val entity = repository.save(storedOwner)
 
         //execute function under test
-        val request = delete("${OwnerController.URI_OWNER_BASE}/${entity.id}")
+        val request = delete("${PersonController.URI_OWNER_BASE}/${entity.id}")
         mockMvc
             .perform(request)
             .andExpect(status().isOk) // validate response
@@ -110,7 +116,12 @@ class OwnerControllerTest(@Autowired val repository: OwnerRepository) {
         result.isEmpty `should be equal to` true
     }
 
-    private fun newOwner(): Owner {
-        return Owner("Bella Italia", "Italy", "info@bella.com")
+    private fun newOwner(): Person {
+        return Person(
+            "Bella Italia",
+            "Italy",
+            "info@bella.com",
+            Type.Guest
+        )
     }
 }
