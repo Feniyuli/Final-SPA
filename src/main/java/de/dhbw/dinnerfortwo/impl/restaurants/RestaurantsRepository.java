@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * The default JpaRepository provides already all basic CRUD operations like reading or storing an entity.
  */
 @Repository
-public interface RestaurantsRepository extends JpaRepository<Restaurants, String> {
+public interface RestaurantsRepository extends JpaRepository<Restaurants, Long> {
 }

@@ -1,22 +1,22 @@
 package de.dhbw.dinnerfortwo.impl.restaurants;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.dhbw.dinnerfortwo.impl.person.Person;
+import de.dhbw.dinnerfortwo.impl.person.PersonTO;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.UUID;
+import java.util.Objects;
 
 @Entity
 public class Restaurants {
     @Id
     //    @GeneratedValue
-    private String id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "ownerid", referencedColumnName = "id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Person ownerId;
+    @JoinColumn(name = "owner", referencedColumnName = "id")
+    private Person owner;
 
     @Column(nullable = false)
     private String name;
@@ -34,16 +34,12 @@ public class Restaurants {
     private Timestamp closeTime;
 
 
-    public Restaurants(Person ownerId, String name, String address, String description, Timestamp openTime, Timestamp closeTime) {
-        this(UUID.randomUUID().toString(),ownerId, name, address, description, openTime, closeTime);
-    }
-
     public Restaurants() {
     }
 
-    public Restaurants(String id, Person ownerId, String name, String address, String description, Timestamp openTime, Timestamp closeTime) {
+    public Restaurants(long id, Person owner, String name, String address, String description, Timestamp openTime, Timestamp closeTime) {
         this.id = id;
-        this.ownerId = ownerId;
+        this.owner = owner;
         this.name = name;
         this.address = address;
         this.description = description;
@@ -51,20 +47,20 @@ public class Restaurants {
         this.closeTime = closeTime;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Person getOwnerId() {
-        return ownerId;
+    public Person getOwner() {
+        return owner;
     }
 
-    public void setOwnerId(Person ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner(Person ownerId) {
+        this.owner = ownerId;
     }
 
     public String getName() {
@@ -108,32 +104,40 @@ public class Restaurants {
     }
 
     // equals and hash code must be based on the ID for JPA to work well.
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Restaurants restaurants = (Restaurants) o;
-
-        return id.equals(restaurants.id);
+        if (!(o instanceof Restaurants)) return false;
+        Restaurants that = (Restaurants) o;
+        return getId() == that.getId() && Objects.equals(getOwner(), that.getOwner()) && Objects.equals(getName(), that.getName()) && Objects.equals(getAddress(), that.getAddress()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getOpenTime(), that.getOpenTime()) && Objects.equals(getCloseTime(), that.getCloseTime());
     }
 
-    // equals and hash code must be based on the ID for JPA to work well.
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(getId());
     }
 
-    @Override
-    public String toString() {
-        return "Restaurants{" +
-                "id=" + id +
-                "ownerId=" + ownerId +
-                ", name='" + name + '\'' +
-                ", adress='" + address + '\'' +
-                ", description='" + description + '\'' +
-                ", openTime='" + description + '\'' +
-                ", closeTime='" + description + '\'' +
-                '}';
+    public RestaurantTO toDTO(){
+
+        RestaurantTO restaurantTO = new RestaurantTO();
+        BeanUtils.copyProperties( this, restaurantTO);
+        Person person = this.getOwner();
+        PersonTO personTO = person.toDTO();
+
+        restaurantTO.setOwner(personTO);
+        return restaurantTO;
+    }
+
+    public static Restaurants toEntity(RestaurantTO restaurantTO){
+        Restaurants restaurantsToEntity = new Restaurants();
+        BeanUtils.copyProperties( restaurantTO, restaurantsToEntity);
+        PersonTO personTO = restaurantTO.getOwner();
+        Person person = Person.toEntity(personTO);
+
+        restaurantsToEntity.setOwner(person);
+
+        return restaurantsToEntity;
     }
 }

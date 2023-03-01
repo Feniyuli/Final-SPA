@@ -1,6 +1,5 @@
 package de.dhbw.dinnerfortwo.impl.restaurants;
 
-import de.dhbw.dinnerfortwo.impl.person.Person;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -8,7 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * The PersonService contains the operations related to managing Persons.
@@ -23,20 +22,32 @@ public class RestaurantsService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Transactional
-    public Restaurants getResto(UUID id) {
+    public RestaurantTO getResto(long id) {
         log.info("Looking for a restaurant with id {}", id);
-        return restaurantsRepository.findById(id.toString()).orElseThrow(() -> new EntityNotFoundException("Could not find restaurants with Id " + id));
+        Restaurants restaurantsById = restaurantsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find restaurants with Id " + id));
+
+        RestaurantTO getRestaurantsById = restaurantsById.toDTO();
+
+        return getRestaurantsById;
     }
 
     @Transactional
-    public List<Restaurants> getAllResto() {
+    public List<RestaurantTO> getAllResto() {
         log.info("Get all restaurants");
-        return restaurantsRepository.findAll().stream().toList();
-    }
+        List<RestaurantTO> getAllResto = ((List<Restaurants>) restaurantsRepository.findAll())
+                .stream()
+                .map(Restaurants::toDTO)
+                .collect(Collectors.toList());;
 
+        return getAllResto;
+    }
     @Transactional
-    public Restaurants create(Restaurants restaurants) {
+    public RestaurantTO create(RestaurantTO restaurants) {
         log.info("Save or update restaurant {}", restaurants);
-        return restaurantsRepository.save(restaurants);
+
+        Restaurants restaurantsTO = Restaurants.toEntity(restaurants);
+        Restaurants savedEntity = restaurantsRepository.save(restaurantsTO);
+
+        return savedEntity.toDTO();
     }
 }

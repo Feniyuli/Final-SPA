@@ -1,16 +1,18 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
 
+import org.springframework.beans.BeanUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.UUID;
+import java.util.Objects;
 
 @Entity
 public class Person {
     @Id
     //    @GeneratedValue
-    private String id;
+    private long id;
 
     @Column(nullable = false)
     private String name;
@@ -24,14 +26,10 @@ public class Person {
     @Column(nullable = false)
     private Type type;
 
-    public Person(String name, String address, String email, Type type) {
-        this(UUID.randomUUID().toString(), name, address, email, type);
-    }
-
     public Person() {
     }
 
-    public Person(String id, String name, String address, String email, Type type) {
+    public Person(long id, String name, String address, String email, Type type) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -39,7 +37,7 @@ public class Person {
         this.type = type;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -55,7 +53,7 @@ public class Person {
         return email;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -80,29 +78,31 @@ public class Person {
     }
 
     // equals and hash code must be based on the ID for JPA to work well.
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (!(o instanceof Person)) return false;
         Person person = (Person) o;
-
-        return id.equals(person.id);
+        return getId() == person.getId() && Objects.equals(getName(), person.getName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getEmail(), person.getEmail()) && getType() == person.getType();
     }
 
-    // equals and hash code must be based on the ID for JPA to work well.
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(getId());
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", adress='" + address + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public PersonTO toDTO(){
+
+        PersonTO personTO = new PersonTO();
+        BeanUtils.copyProperties( this, personTO);
+        return personTO;
+    }
+
+    public static Person toEntity(PersonTO personTO){
+        Person personToEntity = new Person();
+        BeanUtils.copyProperties( personTO, personToEntity);
+
+        return personToEntity;
     }
 }

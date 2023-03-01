@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * The PersonService contains the operations related to managing Persons.
@@ -22,34 +22,33 @@ public class PersonService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Transactional
-    public Person getPerson(UUID id) {
+    public PersonTO getPerson(long id) {
         log.info("Looking for an person with id {}", id);
-        return personRepository.findById(id.toString()).orElseThrow(() -> new EntityNotFoundException("Could not find person with Id " + id));
+        Person personById = personRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find person with Id " + id));
+
+        PersonTO getPersonById = personById.toDTO();
+        return getPersonById;
     }
 
     @Transactional
-    public List<Person> getAllPersons() {
+    public List<PersonTO> getAllPersons() {
         log.info("Get all persons");
-        return personRepository.findAll().stream().toList();
+        List<PersonTO> getAllPersons = ((List<Person>) personRepository.findAll())
+                .stream()
+                .map(Person::toDTO)
+                .collect(Collectors.toList());;
+
+
+        return getAllPersons;
     }
 
     @Transactional
-    public Person create(Person person) {
-        log.info("Save or update person {}", person);
-        return personRepository.save(person);
-    }
+    public PersonTO create(PersonTO personTO) {
+        log.info("Save or update person {}", personTO);
 
-    @Transactional
-    public void update(Person person) {
-        var persisted = personRepository.findById(person.getId()).orElseThrow(() -> new EntityNotFoundException("Could not find person with Id " + person.getId()));
-        persisted.setName(person.getName());
-        persisted.setAddress(person.getAddress());
-        persisted.setEmail(person.getEmail());
-        personRepository.save(person);
-    }
+        Person person = Person.toEntity(personTO);
+        Person savedEntity = personRepository.save(person);
 
-    public void delete(UUID id) {
-        log.info("Deleting person with id {}", id);
-        personRepository.deleteById(id.toString());
+        return savedEntity.toDTO();
     }
 }
