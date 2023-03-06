@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 @Service
 public class TablesService {
 
-    private final TablesRepository tablesRepository;
-    public TablesService(TablesRepository tablesRepository) {
+    private final de.dhbw.dinnerfortwo.impl.table.TablesRepository tablesRepository;
+    public TablesService(de.dhbw.dinnerfortwo.impl.table.TablesRepository tablesRepository) {
         this.tablesRepository = tablesRepository;
     }
 
@@ -29,10 +29,10 @@ public class TablesService {
         return getAllTables;
     }
     @Transactional
-    public TablesTO create(TablesTO tablesTO) {
+    public de.dhbw.dinnerfortwo.impl.table.TablesTO create(de.dhbw.dinnerfortwo.impl.table.TablesTO tablesTO) {
         log.info("Save or update Tables {}", tablesTO);
 
-        Tables tablesToEntity = Tables.toEntity(tablesTO);
+        Tables tablesToEntity = Tables.toEntity(tabelsTO);
         Tables savedEntity = tablesRepository.save(tablesToEntity);
 
         return savedEntity.toDTO();

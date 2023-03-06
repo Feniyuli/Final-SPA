@@ -1,0 +1,53 @@
+package de.dhbw.dinnerfortwo.impl.item;
+
+import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
+import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
+import de.dhbw.dinnerfortwo.impl.table.ItemsTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class ItemsService {
+
+    private final ItemsRepository itemsRepository;
+    public ItemsService(ItemsRepository itemsRepository) {
+        this.itemsRepository = itemsRepository;
+    }
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    @Transactional
+
+    public ItemsTO getItem(long id) {
+        log.info("Looking for an item with id {}", id);
+        Items ItemsById = itemsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find item with Id " + id));
+
+        ItemsTO getItemsById = ItemsById.toDTO();
+
+        return getItemsById;
+    }
+    @Transactional
+    public List<ItemsTO> getAllItems() {
+        log.info("Get all Items");
+        List<ItemsTO> getAllItems = ((List<Items>) itemsRepository.findAll())
+                .stream()
+                .map(Items::toDTO)
+                .collect(Collectors.toList());;
+
+        return getAllItems;
+    }
+    @Transactional
+    public ItemsTO create(ItemsTO itemsTO) {
+        log.info("Save or update Items {}", itemsTO);
+
+        Items itemsToEntity = Items.toEntity(itemsTO);
+        Items savedEntity = itemsRepository.save(itemsToEntity);
+
+        return savedEntity.toDTO();
+    }
+}
