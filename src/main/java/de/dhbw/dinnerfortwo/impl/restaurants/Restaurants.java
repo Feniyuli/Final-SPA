@@ -132,7 +132,7 @@ public class Restaurants {
 
     public static Restaurants toEntity(RestaurantTO restaurantTO){
         Restaurants restaurantsToEntity = new Restaurants();
-        BeanUtils.copyProperties( restaurantTO, restaurantsToEntity);
+        BeanUtils.copyProperties(restaurantTO, restaurantsToEntity);
         PersonTO personTO = restaurantTO.getOwner();
         Person person = Person.toEntity(personTO);
 

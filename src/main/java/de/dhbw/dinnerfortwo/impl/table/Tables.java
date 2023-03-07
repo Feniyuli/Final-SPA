@@ -75,14 +75,14 @@ public class Tables {
         return tablesTO;
     }
 
-    public static Tables toEntity(TablesTO itemsTO){
-        Tables restaurantsToEntity = new Tables();
-        BeanUtils.copyProperties(itemsTO, restaurantsToEntity);
-        RestaurantTO restaurantTO = itemsTO.getRestaurants();
+    public static Tables toEntity(TablesTO tablesTO){
+        Tables tablesToEntity = new Tables();
+        BeanUtils.copyProperties(tablesTO, tablesToEntity);
+        RestaurantTO restaurantTO = tablesTO.getRestaurants();
         Restaurants restaurants = Restaurants.toEntity(restaurantTO);
 
-        restaurantsToEntity.setRestaurants(restaurants);
+        tablesToEntity.setRestaurants(restaurants);
 
-        return restaurantsToEntity;
+        return tablesToEntity;
     }
 }
