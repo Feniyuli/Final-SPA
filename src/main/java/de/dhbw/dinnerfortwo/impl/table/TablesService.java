@@ -1,11 +1,10 @@
 package de.dhbw.dinnerfortwo.impl.table;
 
-import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,23 +19,32 @@ public class TablesService {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    //@Transactional
-    //public List<TablesTO> getAllTables() {
-    //    log.info("Get all tables");
-    //    List<TablesTO> getAllTables = ((List<Tables>) tablesRepository.findAll())
-    //            .stream()
-    //            .map(Tables::toDTO)
-    //            .collect(Collectors.toList());;
+    @Transactional
+    public TablesTO getTable(long id) {
+        log.info("Looking for a table with id {}", id);
+        Tables TablesById = tablesRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find table with Id " + id));
 
-    //    return getAllTables;
-    //}
-    //@Transactional
-    //public de.dhbw.dinnerfortwo.impl.table.TablesTO create(de.dhbw.dinnerfortwo.impl.table.TablesTO tablesTO) {
-    //    log.info("Save or update Tables {}", tablesTO);
+        TablesTO getTablesById = TablesById.toDTO();
 
-    //    Tables tablesToEntity = Tables.toEntity(tabelsTO);
-    //    Tables savedEntity = tablesRepository.save(tablesToEntity);
+        return getTablesById;
+    }
+    @Transactional
+    public List<TablesTO> getAllTables() {
+        log.info("Get all Tables");
+        List<TablesTO> getAllTables = tablesRepository.findAll()
+                .stream()
+                .map(Tables::toDTO)
+                .collect(Collectors.toList());
 
-    //    return savedEntity.toDTO();
-    //}
+        return getAllTables;
+    }
+    @Transactional
+    public TablesTO create(TablesTO tablesTO) {
+        log.info("Save or update Tables {}", tablesTO);
+
+        Tables tablesToEntity = Tables.toEntity(tablesTO);
+        Tables savedEntity = tablesRepository.save(tablesToEntity);
+
+        return savedEntity.toDTO();
+    }
 }

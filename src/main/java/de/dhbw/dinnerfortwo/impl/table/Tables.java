@@ -64,15 +64,15 @@ public class Tables {
         return Objects.hash(getId());
     }
 
-    public de.dhbw.dinnerfortwo.impl.item.ItemsTO toDTO(){
+    public de.dhbw.dinnerfortwo.impl.table.TablesTO toDTO(){
 
-        de.dhbw.dinnerfortwo.impl.item.ItemsTO itemsTO = new de.dhbw.dinnerfortwo.impl.item.ItemsTO();
-        BeanUtils.copyProperties( this, itemsTO);
+        de.dhbw.dinnerfortwo.impl.table.TablesTO tablesTO = new de.dhbw.dinnerfortwo.impl.table.TablesTO();
+        BeanUtils.copyProperties( this, tablesTO);
         Restaurants restaurants = this.getRestaurants();
         RestaurantTO restaurantTO = restaurants.toDTO();
 
-        itemsTO.setRestaurants(restaurantTO);
-        return itemsTO;
+        tablesTO.setRestaurants(restaurantTO);
+        return tablesTO;
     }
 
     public static Tables toEntity(TablesTO itemsTO){

@@ -21,8 +21,8 @@ public class ItemsService {
     }
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    @Transactional
 
+    @Transactional
     public ItemsTO getItem(long id) {
         log.info("Looking for an item with id {}", id);
         Items ItemsById = itemsRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find item with Id " + id));
