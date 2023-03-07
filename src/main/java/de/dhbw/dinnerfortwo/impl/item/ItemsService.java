@@ -2,7 +2,7 @@ package de.dhbw.dinnerfortwo.impl.item;
 
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
-import de.dhbw.dinnerfortwo.impl.table.ItemsTO;
+import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,10 +34,10 @@ public class ItemsService {
     @Transactional
     public List<ItemsTO> getAllItems() {
         log.info("Get all Items");
-        List<ItemsTO> getAllItems = ((List<Items>) itemsRepository.findAll())
+        List<ItemsTO> getAllItems = itemsRepository.findAll()
                 .stream()
                 .map(Items::toDTO)
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
 
         return getAllItems;
     }

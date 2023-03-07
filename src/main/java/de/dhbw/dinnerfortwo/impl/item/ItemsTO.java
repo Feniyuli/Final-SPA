@@ -1,4 +1,4 @@
-package de.dhbw.dinnerfortwo.impl.table;
+package de.dhbw.dinnerfortwo.impl.item;
 
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;

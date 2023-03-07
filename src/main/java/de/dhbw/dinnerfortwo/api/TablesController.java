@@ -26,17 +26,17 @@ public class TablesController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @GetMapping
-    public ResponseEntity<List<TablesTO>> getAllTables() {
-        log.info("Get all tables");
-        var result = tablesService.getAllTables();
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+    //@GetMapping
+    //public ResponseEntity<List<TablesTO>> getAllTables() {
+    //    log.info("Get all tables");
+    //    var result = tablesService.getAllTables();
+    //    return new ResponseEntity<>(result, HttpStatus.OK);
+    //}
 
-    @PostMapping
-    public ResponseEntity<TablesTO> createResto(@RequestBody TablesTO newTable) {
-        TablesTO result = tablesService.create(newTable);
-        log.info("Created table {}", result);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
+    //@PostMapping
+    //public ResponseEntity<TablesTO> createTable(@RequestBody TablesTO newTable) {
+    //    TablesTO result = tablesService.create(newTable);
+    //    log.info("Created table {}", result);
+    //    return new ResponseEntity<>(result, HttpStatus.CREATED);
+    //}
 }

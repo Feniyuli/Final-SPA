@@ -1,6 +1,6 @@
 package de.dhbw.dinnerfortwo.impl.table;
 
-import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
+//import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.springframework.beans.BeanUtils;
@@ -64,9 +64,9 @@ public class Tables {
         return Objects.hash(getId());
     }
 
-    public de.dhbw.dinnerfortwo.impl.table.ItemsTO toDTO(){
+    public de.dhbw.dinnerfortwo.impl.item.ItemsTO toDTO(){
 
-        de.dhbw.dinnerfortwo.impl.table.ItemsTO itemsTO = new de.dhbw.dinnerfortwo.impl.table.ItemsTO();
+        de.dhbw.dinnerfortwo.impl.item.ItemsTO itemsTO = new de.dhbw.dinnerfortwo.impl.item.ItemsTO();
         BeanUtils.copyProperties( this, itemsTO);
         Restaurants restaurants = this.getRestaurants();
         RestaurantTO restaurantTO = restaurants.toDTO();
