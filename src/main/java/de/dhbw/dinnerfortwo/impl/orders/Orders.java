@@ -18,13 +18,13 @@ public class Orders {
     @JoinColumn(name = "person", referencedColumnName = "id")
     private Person person;
 
+    public Orders() {
+    }
+
     public Orders(long id, boolean isPaid, Person person) {
         this.id = id;
         this.isPaid = isPaid;
         this.person = person;
-    }
-
-    public Orders() {
     }
 
     public long getId() {
