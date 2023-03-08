@@ -45,8 +45,8 @@ public class RestaurantsService {
     public RestaurantTO create(RestaurantTO restaurants) {
         log.info("Save or update restaurant {}", restaurants);
 
-        Restaurants restaurantsTO = Restaurants.toEntity(restaurants);
-        Restaurants savedEntity = restaurantsRepository.save(restaurantsTO);
+        Restaurants restaurantsToEntity = Restaurants.toEntity(restaurants);
+        Restaurants savedEntity = restaurantsRepository.save(restaurantsToEntity);
 
         return savedEntity.toDTO();
     }
