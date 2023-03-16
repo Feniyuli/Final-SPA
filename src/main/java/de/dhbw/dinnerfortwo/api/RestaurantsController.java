@@ -1,9 +1,11 @@
 package de.dhbw.dinnerfortwo.api;
 
+import de.dhbw.dinnerfortwo.impl.item.Items;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +20,17 @@ import static de.dhbw.dinnerfortwo.api.RestaurantsController.URI_RESTAURANTS_BAS
 @RequestMapping(value = URI_RESTAURANTS_BASE, produces = "application/json;charset=UTF-8")
 public class RestaurantsController {
     public static final String URI_RESTAURANTS_BASE = URI_BASE + "/resto";
-
+    @Autowired
     private final RestaurantsService restaurantsService;
-
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public RestaurantsController(RestaurantsService restaurantsService) {
         this.restaurantsService = restaurantsService;
+    }
+
+    @GetMapping("/{restaurantId}/items")
+    public List<Items> getItemsByRestaurantId(@PathVariable Long restaurantId) {
+        return restaurantsService.getItemsByRestaurantId(restaurantId);
     }
 
     @GetMapping("/{id}")
