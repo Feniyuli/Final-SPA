@@ -2,16 +2,16 @@ package de.dhbw.dinnerfortwo.api;
 
 import de.dhbw.dinnerfortwo.impl.person.PersonService;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
+import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
+import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -22,6 +22,7 @@ import static de.dhbw.dinnerfortwo.api.PersonController.URI_OWNER_BASE;
  * REST (HTTP) API of the Dinner app to interact with the UI or external applications.
  * The REST API provides the CRUD operations to create, read, update or delete a restaurant.
  */
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping(value = URI_OWNER_BASE, produces = "application/json;charset=UTF-8")
 public class PersonController {
@@ -29,9 +30,13 @@ public class PersonController {
     public static final String URI_OWNER_BASE = URI_BASE + "/persons";
 
     private final PersonService personService;
+    private final ReservationService reservationService;
+    private final RestaurantsService restaurantsService;
 
-    public PersonController(PersonService personService) {
+    public PersonController(PersonService personService, ReservationService reservationService, RestaurantsService restaurantsService) {
         this.personService = personService;
+        this.reservationService = reservationService;
+        this.restaurantsService = restaurantsService;
     }
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -60,4 +65,27 @@ public class PersonController {
         log.info("Created person {}", result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+    @GetMapping("/reservation/{id}")
+    public ResponseEntity<List<ReservationTO>> getAllReservationByGuestId(@PathVariable("id")Long id) {
+        log.info("Get reservation with id {}");
+        try {
+            var reservations = reservationService.getAllReservationByGuestId(id);
+            return ResponseEntity.ok(reservations);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/restaurants/{id}")
+    public ResponseEntity<List<RestaurantTO>> getAllRestaurantsByOwnerId(@PathVariable("id")Long id){
+        log.info("Get restaurants with id {}");
+        try {
+            var restaurantsByOwnerId = restaurantsService.getAllRestaurantsByOwnerId(id);
+            return ResponseEntity.ok(restaurantsByOwnerId);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

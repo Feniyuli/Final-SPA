@@ -1,5 +1,7 @@
 package de.dhbw.dinnerfortwo.api;
 
+import de.dhbw.dinnerfortwo.impl.person.Person;
+import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import org.slf4j.Logger;
@@ -33,10 +35,10 @@ public class ReservationController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<ReservationTO>> getAllRes(@PathVariable long id) {
+    public ResponseEntity<ReservationTO> getAllRes(@PathVariable long id) {
         log.info("Get reservation with id {}", id);
         try {
-            var reservations = reservationService.getAllRes();
+            var reservations = reservationService.getRes(id);
             return ResponseEntity.ok(reservations);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -56,4 +58,7 @@ public class ReservationController {
         log.info("Created reservation {}", result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+
+
 }

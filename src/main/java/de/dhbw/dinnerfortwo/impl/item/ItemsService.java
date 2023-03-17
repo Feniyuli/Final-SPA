@@ -1,5 +1,7 @@
 package de.dhbw.dinnerfortwo.impl.item;
 
+import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
@@ -49,5 +51,16 @@ public class ItemsService {
         Items savedEntity = itemsRepository.save(itemsToEntity);
 
         return savedEntity.toDTO();
+    }
+
+    @Transactional
+    public List<ItemsTO> getAllReservationByGuestId(Long id) {
+        log.info("Get all Items by Restaurant Id");
+        List<ItemsTO> getAllItem = ((List<Items>) itemsRepository.findAllItemsByRestaurantId(id))
+                .stream()
+                .map(Items::toDTO)
+                .collect(Collectors.toList());
+
+        return getAllItem;
     }
 }

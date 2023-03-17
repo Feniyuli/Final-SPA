@@ -1,5 +1,7 @@
 package de.dhbw.dinnerfortwo.impl.reservation;
 
+import de.dhbw.dinnerfortwo.impl.person.Person;
+import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.slf4j.Logger;
@@ -57,6 +59,25 @@ public class ReservationService {
         return savedEntity.toDTO();
     }
 
-}
+    @Transactional
+    public List<ReservationTO> getAllReservationByGuestId(Long id) {
+        log.info("Get all reservations by Guest Id");
+        List<ReservationTO> getAllRes = ((List<Reservation>) reservationRepository.findAllReservationByGuestId(id))
+                .stream()
+                .map(Reservation::toDTO)
+                .collect(Collectors.toList());
 
-//why getRes grey?
+        return getAllRes;
+    }
+
+    @Transactional
+    public List<ReservationTO> getAllReservationByRestaurantId(Long id){
+        List<ReservationTO> getAllRes = ((List<Reservation>) reservationRepository.findAllReservationByRestaurantId(id))
+                .stream()
+                .map(Reservation::toDTO)
+                .collect(Collectors.toList());
+
+        return getAllRes;
+    }
+
+}

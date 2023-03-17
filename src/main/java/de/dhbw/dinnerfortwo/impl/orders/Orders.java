@@ -3,6 +3,7 @@ package de.dhbw.dinnerfortwo.impl.orders;
 import de.dhbw.dinnerfortwo.impl.person.Person;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 
+import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
@@ -17,6 +18,9 @@ public class Orders {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "person", referencedColumnName = "id")
     private Person person;
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "restaurants", referencedColumnName = "id")
+    private Restaurants restaurants;
 
     public Orders() {
     }
