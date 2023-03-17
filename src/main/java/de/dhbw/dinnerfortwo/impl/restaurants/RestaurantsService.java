@@ -1,12 +1,8 @@
 package de.dhbw.dinnerfortwo.impl.restaurants;
 
-import de.dhbw.dinnerfortwo.impl.item.Items;
-import de.dhbw.dinnerfortwo.impl.item.ItemsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -24,14 +20,6 @@ public class RestaurantsService {
 
     private final RestaurantsRepository restaurantsRepository;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private ItemsRepository itemsRepository;
-
-    public List<Items> getItemsByRestaurantId(Long restaurantId) {
-        Restaurants restaurant = restaurantsRepository.findById(restaurantId)
-                .orElseThrow(() -> new NotFoundException("restaurant by id could not be found"));
-        return itemsRepository.findByRestaurants(restaurant);
-    }
 
     @Transactional
     public RestaurantTO getResto(long id) {

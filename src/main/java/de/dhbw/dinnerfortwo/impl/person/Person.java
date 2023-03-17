@@ -1,13 +1,12 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.springframework.beans.BeanUtils;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 public class Person {
@@ -26,10 +25,6 @@ public class Person {
 
     @Column(nullable = false)
     private Type type;
-
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"owner", "hibernateLazyInitializer", "handler"})
-    private Set<Restaurants> restaurants;
 
     public Person() {
     }
