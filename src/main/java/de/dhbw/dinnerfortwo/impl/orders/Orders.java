@@ -3,6 +3,7 @@ package de.dhbw.dinnerfortwo.impl.orders;
 import de.dhbw.dinnerfortwo.impl.person.Person;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 
+import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.springframework.beans.BeanUtils;
 
@@ -25,10 +26,11 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(long id, boolean isPaid, Person person) {
+    public Orders(long id, boolean isPaid, Person person, Restaurants restaurants) {
         this.id = id;
         this.isPaid = isPaid;
         this.person = person;
+        this.restaurants = restaurants;
     }
 
     public long getId() {
@@ -39,20 +41,28 @@ public class Orders {
         this.id = id;
     }
 
-    public boolean getIsPaid() {
-        return isPaid;
-    }
-
-    public void setIsPaid(boolean isPaid) {
-        this.isPaid = isPaid;
-    }
-
     public Person getPerson() {
         return person;
     }
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
+    }
+
+    public Restaurants getRestaurants() {
+        return restaurants;
+    }
+
+    public void setRestaurants(Restaurants restaurants) {
+        this.restaurants = restaurants;
     }
 
     @Override
@@ -74,8 +84,11 @@ public class Orders {
         BeanUtils.copyProperties( this, ordersTO);
         Person person = this.getPerson();
         PersonTO personTO = person.toDTO();
+        Restaurants restaurants = this.getRestaurants();
+        RestaurantTO restaurantTO = restaurants.toDTO();
 
         ordersTO.setPerson(personTO);
+        ordersTO.setRestaurants(restaurantTO);
         return ordersTO;
     }
 
@@ -84,9 +97,11 @@ public class Orders {
         BeanUtils.copyProperties(ordersTO, ordersToEntity);
         PersonTO personTO = ordersTO.getPerson();
         Person person = Person.toEntity(personTO);
+        RestaurantTO restaurantTO = ordersTO.getRestaurants();
+        Restaurants restaurants = Restaurants.toEntity(restaurantTO);
 
         ordersToEntity.setPerson(person);
-
+        ordersToEntity.setRestaurants(restaurants);
         return ordersToEntity;
     }
 }
