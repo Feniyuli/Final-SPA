@@ -2,6 +2,8 @@ package de.dhbw.dinnerfortwo.api;
 
 import de.dhbw.dinnerfortwo.impl.item.ItemsService;
 import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
+import de.dhbw.dinnerfortwo.impl.orders.OrdersService;
+import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
@@ -26,14 +28,16 @@ public class RestaurantsController {
     private final RestaurantsService restaurantsService;
     private final ItemsService itemsService;
     private final ReservationService reservationService;
+    private final OrdersService ordersService;
 
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public RestaurantsController(RestaurantsService restaurantsService, ItemsService itemsService, ReservationService reservationService) {
+    public RestaurantsController(RestaurantsService restaurantsService, ItemsService itemsService, ReservationService reservationService, OrdersService ordersService) {
         this.restaurantsService = restaurantsService;
         this.itemsService = itemsService;
         this.reservationService = reservationService;
+        this.ordersService = ordersService;
     }
 
     @GetMapping("/{id}")
@@ -71,13 +75,24 @@ public class RestaurantsController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    // RestaraurantId != GuestId!
     @GetMapping("/reservation/{id}")
     public ResponseEntity<List<ReservationTO>> getAllReservationByGuestId(@PathVariable("id")Long id) {
         log.info("Get reservation with id {}");
         try {
             var reservations = reservationService.getAllReservationByRestaurantId(id);
             return ResponseEntity.ok(reservations);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<List<OrdersTO>> getAllOrderByRestaurantId(@PathVariable("id")Long id) {
+        log.info("Get all orders with restaurant id {}");
+        try {
+            var orders = ordersService.getAllOrdersByRestaurantId(id);
+            return ResponseEntity.ok(orders);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
