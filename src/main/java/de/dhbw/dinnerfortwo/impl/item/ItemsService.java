@@ -54,7 +54,7 @@ public class ItemsService {
     }
 
     @Transactional
-    public List<ItemsTO> getAllReservationByGuestId(Long id) {
+    public List<ItemsTO> getAllItemByRestaurantId(Long id) {
         log.info("Get all Items by Restaurant Id");
         List<ItemsTO> getAllItem = ((List<Items>) itemsRepository.findAllItemsByRestaurantId(id))
                 .stream()

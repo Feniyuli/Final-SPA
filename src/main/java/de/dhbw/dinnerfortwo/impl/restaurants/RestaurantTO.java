@@ -11,11 +11,12 @@ public class RestaurantTO {
     private String description;
     private Timestamp openTime;
     private Timestamp closeTime;
+    private String picture;
 
     public RestaurantTO() {
     }
 
-    public RestaurantTO(long id, PersonTO owner, String name, String address, String description, Timestamp openTime, Timestamp closeTime) {
+    public RestaurantTO(long id, PersonTO owner, String name, String address, String description, Timestamp openTime, Timestamp closeTime, String picture) {
         this.id = id;
         this.owner = owner;
         this.name = name;
@@ -23,6 +24,15 @@ public class RestaurantTO {
         this.description = description;
         this.openTime = openTime;
         this.closeTime = closeTime;
+        this.picture = picture;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public long getId() {

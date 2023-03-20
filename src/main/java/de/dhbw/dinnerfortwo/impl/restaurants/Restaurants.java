@@ -33,11 +33,14 @@ public class Restaurants {
     @Column(nullable = false)
     private Timestamp closeTime;
 
+    @Column(nullable = false)
+    private String picture;
+
 
     public Restaurants() {
     }
 
-    public Restaurants(long id, Person owner, String name, String address, String description, Timestamp openTime, Timestamp closeTime) {
+    public Restaurants(long id, Person owner, String name, String address, String description, Timestamp openTime, Timestamp closeTime, String picture) {
         this.id = id;
         this.owner = owner;
         this.name = name;
@@ -45,6 +48,7 @@ public class Restaurants {
         this.description = description;
         this.openTime = openTime;
         this.closeTime = closeTime;
+        this.picture = picture;
     }
 
     public long getId() {
@@ -101,6 +105,14 @@ public class Restaurants {
 
     public void setCloseTime(Timestamp closeTime) {
         this.closeTime = closeTime;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     // equals and hash code must be based on the ID for JPA to work well.

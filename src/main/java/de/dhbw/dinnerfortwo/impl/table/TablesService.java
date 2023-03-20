@@ -1,5 +1,7 @@
 package de.dhbw.dinnerfortwo.impl.table;
 
+import de.dhbw.dinnerfortwo.impl.item.Items;
+import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -46,5 +48,16 @@ public class TablesService {
         Tables savedEntity = tablesRepository.save(tablesToEntity);
 
         return savedEntity.toDTO();
+    }
+
+    @Transactional
+    public List<TablesTO> getTablesByRestaurantId(Long id) {
+        log.info("Get all Items by Restaurant Id");
+        List<TablesTO> getAllTables = ((List<Tables>) tablesRepository.findAllTablesByRestaurantId(id))
+                .stream()
+                .map(Tables::toDTO)
+                .collect(Collectors.toList());
+
+        return getAllTables;
     }
 }
