@@ -15,16 +15,16 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     @Query(value = """
-      select t from Reservation t\s
-      where t.person.id = :id\s
+      SELECT t FROM Reservation t\s
+      WHERE t.person.id = :id\s
       """)
     List<Reservation> findAllReservationByGuestId(Long id);
 
 
     @Query(value = """
-      select t from Reservation t inner join Tables u \s
-      on t.table.id = u.id\s
-      where u.restaurants.id = :id\s
+      SELECT t FROM Reservation t INNER JOIN Tables u \s
+      ON t.table.id = u.id\s
+      WHERE u.restaurants.id = :id\s
       """)
     List<Reservation> findAllReservationByRestaurantId(Long id);
 

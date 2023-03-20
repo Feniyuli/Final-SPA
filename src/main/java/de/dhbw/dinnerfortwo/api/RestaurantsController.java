@@ -2,12 +2,12 @@ package de.dhbw.dinnerfortwo.api;
 
 import de.dhbw.dinnerfortwo.impl.item.ItemsService;
 import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
+import de.dhbw.dinnerfortwo.impl.orders.OrdersService;
+import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantsService;
-import de.dhbw.dinnerfortwo.impl.table.TablesService;
-import de.dhbw.dinnerfortwo.impl.table.TablesTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,16 +28,16 @@ public class RestaurantsController {
     private final RestaurantsService restaurantsService;
     private final ItemsService itemsService;
     private final ReservationService reservationService;
-    private final TablesService tablesService;
+    private final OrdersService ordersService;
 
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public RestaurantsController(RestaurantsService restaurantsService, ItemsService itemsService, ReservationService reservationService, TablesService tablesService) {
+    public RestaurantsController(RestaurantsService restaurantsService, ItemsService itemsService, ReservationService reservationService, OrdersService ordersService) {
         this.restaurantsService = restaurantsService;
         this.itemsService = itemsService;
         this.reservationService = reservationService;
-        this.tablesService = tablesService;
+        this.ordersService = ordersService;
     }
 
     @GetMapping("/{id}")
@@ -69,15 +69,15 @@ public class RestaurantsController {
     public ResponseEntity<List<ItemsTO>> getAllItemByRestaurantId(@PathVariable("id")Long id) {
         log.info("Get Items with Restaurant id {}");
         try {
-            var items = itemsService.getAllItemByRestaurantId(id);
+            var items = itemsService.getAllReservationByGuestId(id);
             return ResponseEntity.ok(items);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
-
+    // RestaraurantId != GuestId!
     @GetMapping("/reservation/{id}")
-    public ResponseEntity<List<ReservationTO>> getAllReservationByRestaurantId(@PathVariable("id")Long id) {
+    public ResponseEntity<List<ReservationTO>> getAllReservationByGuestId(@PathVariable("id")Long id) {
         log.info("Get reservation with id {}");
         try {
             var reservations = reservationService.getAllReservationByRestaurantId(id);
@@ -87,16 +87,15 @@ public class RestaurantsController {
         }
     }
 
-    @GetMapping("/tables/{id}")
-    public ResponseEntity<List<TablesTO>> getAllTablesByRestaurantId(@PathVariable("id")Long id) {
-        log.info("Get tables with id {}");
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<List<OrdersTO>> getAllOrderByRestaurantId(@PathVariable("id")Long id) {
+        log.info("Get all orders with restaurant id {}");
         try {
-            var tablesByRestaurantId = tablesService.getTablesByRestaurantId(id);
-            return ResponseEntity.ok(tablesByRestaurantId);
+            var orders = ordersService.getAllOrdersByRestaurantId(id);
+            return ResponseEntity.ok(orders);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
-
 
 }

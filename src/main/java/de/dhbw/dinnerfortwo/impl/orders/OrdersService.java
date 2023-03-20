@@ -1,6 +1,8 @@
 package de.dhbw.dinnerfortwo.impl.orders;
 
 
+import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -47,5 +49,15 @@ public class OrdersService {
         Orders savedEntity = ordersRepository.save(ordersToEntity);
 
         return savedEntity.toDTO();
+    }
+
+    @Transactional
+    public List<OrdersTO> getAllOrdersByRestaurantId(Long id){
+        List<OrdersTO> getAllOrders = ((List<Orders>) ordersRepository.findAllOrdersByRestaurantId(id))
+                .stream()
+                .map(Orders::toDTO)
+                .collect(Collectors.toList());
+
+        return getAllOrders;
     }
 }
