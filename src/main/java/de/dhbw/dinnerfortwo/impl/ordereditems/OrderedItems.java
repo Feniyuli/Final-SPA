@@ -55,6 +55,7 @@ public class OrderedItems {
     public void setItems(Items items) {
         this.items = items;
     }
+
     public Orders getOrders() {
         return orders;
     }
@@ -77,7 +78,6 @@ public class OrderedItems {
     }
 
     public OrderedItemsTO toDTO(){
-
         OrderedItemsTO orderedItemsTO = new OrderedItemsTO();
         BeanUtils.copyProperties( this, orderedItemsTO);
         Items items = this.getItems();
@@ -87,7 +87,6 @@ public class OrderedItems {
 
         orderedItemsTO.setItems(itemTO);
         orderedItemsTO.setOrders(ordersTO);
-
         return orderedItemsTO;
     }
 

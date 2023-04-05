@@ -1,4 +1,7 @@
 package de.dhbw.dinnerfortwo.impl.ordereditems;
+import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
+import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
+import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -47,4 +50,15 @@ public class OrderedItemsService {
         return savedEntity.toDTO();
     }
 
+    @Transactional
+    public List<OrderedItemsTO> getAllOrderedItemsByOrderId(Long id){
+        log.info("Get all ordered Items by order id");
+
+        List<OrderedItemsTO> getAllOrderedItems= ((List<OrderedItems>) orderedItemsRepository.getAllOrderedItemsByOrderId(id))
+                .stream()
+                .map(OrderedItems::toDTO)
+                .collect(Collectors.toList());
+
+        return getAllOrderedItems;
+    }
 }

@@ -1,15 +1,15 @@
 package de.dhbw.dinnerfortwo.impl.orders;
 
 
-import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
-import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,11 +53,43 @@ public class OrdersService {
 
     @Transactional
     public List<OrdersTO> getAllOrdersByRestaurantId(Long id){
-        List<OrdersTO> getAllOrders = ((List<Orders>) ordersRepository.findAllOrdersByRestaurantId(id))
+        log.info("Get all orders with the restaurant id {}", id);
+        List<OrdersTO> getAllOrders = ordersRepository.findAllOrdersByRestaurantId(id)
                 .stream()
                 .map(Orders::toDTO)
                 .collect(Collectors.toList());
 
         return getAllOrders;
+    }
+
+    @Transactional
+    public OrdersTO isPaid(long id) {
+        log.info("Update isPaid attribute to true {}", id);
+        OrdersTO order = getOrder(id);
+        order.setIsPaid(true);
+
+        Orders ordersToEntity = Orders.toEntity(order);
+        Orders savedEntity = ordersRepository.save(ordersToEntity);
+        return savedEntity.toDTO();
+    }
+
+    @Transactional
+    public OrdersTO updateOrderIsPaid(Long id) {
+        Optional<Orders> order = ordersRepository.findById(id);
+        if (order.isPresent()) {
+            Orders updatedOrder = order.get();
+            updatedOrder.setIsPaid(true);
+            updatedOrder = ordersRepository.save(updatedOrder);
+            return orderToTO(updatedOrder);
+        } else {
+            throw new NotFoundException("could not find order with id {" + id + "}.");
+        }
+    }
+
+    private OrdersTO orderToTO(Orders order) {
+        OrdersTO orderTO = new OrdersTO();
+        orderTO.setId(order.getId());
+        orderTO.setIsPaid(order.isPaid());
+        return orderTO;
     }
 }
