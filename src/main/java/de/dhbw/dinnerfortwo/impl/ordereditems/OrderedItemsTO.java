@@ -7,16 +7,14 @@ public class OrderedItemsTO {
     private long id;
     private int amount;
     private ItemsTO items;
-    private OrdersTO orders;
 
     public OrderedItemsTO() {
     }
 
-    public OrderedItemsTO(long id, int amount, ItemsTO items, OrdersTO orders) {
+    public OrderedItemsTO(long id, int amount, ItemsTO items) {
         this.id = id;
         this.amount = amount;
         this.items = items;
-        this.orders = orders;
     }
 
     public long getId() {
@@ -38,10 +36,5 @@ public class OrderedItemsTO {
     public ItemsTO getItems(){return items;}
 
     public void setItems(ItemsTO items) { this.items = items;
-    }
-
-    public OrdersTO getOrders() {return orders;
-    }
-    public void setOrders(OrdersTO orders) { this.orders = orders;
     }
 }

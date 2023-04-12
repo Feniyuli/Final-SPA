@@ -5,9 +5,10 @@ import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsTO;
 import de.dhbw.dinnerfortwo.impl.person.Person;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 
+import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @Entity
 public class Orders {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false)
     private boolean isPaid;
@@ -25,21 +27,15 @@ public class Orders {
     @JoinColumn(name = "person", referencedColumnName = "id")
     private Person person;
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "restaurants", referencedColumnName = "id")
-    private Restaurants restaurants;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
-    private List<OrderedItems> orderedItems = new ArrayList<>();
+    @JoinColumn(name = "reservation", referencedColumnName = "id")
+    private Reservation reservation;
+    @OneToMany(targetEntity = OrderedItems.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
+    @JoinColumn(name = "orderedItems", referencedColumnName = "id")
+    private List<OrderedItems> orderedItems;
 
     public Orders() {
     }
 
-    public Orders(long id, boolean isPaid, Person person, Restaurants restaurants, List<OrderedItems> orderedItems) {
-        this.id = id;
-        this.isPaid = isPaid;
-        this.person = person;
-        this.restaurants = restaurants;
-        this.orderedItems = orderedItems;
-    }
 
     public long getId() {
         return id;
@@ -57,30 +53,29 @@ public class Orders {
         this.person = person;
     }
 
-    public boolean isPaid() { return isPaid; }
-
-    public void setIsPaid(boolean isPaid) {
-        this.isPaid = isPaid;
+    public boolean isPaid() {
+        return isPaid;
     }
 
-    public Restaurants getRestaurants() {
-        return restaurants;
+    public void setPaid(boolean paid) {
+        isPaid = paid;
     }
 
-    public void setRestaurants(Restaurants restaurants) {
-        this.restaurants = restaurants;
-    }
 
-    public List<OrderedItemsTO> getOrderedItems() {
-        List<OrderedItemsTO> orderedItems = new ArrayList<>();
-        for (OrderedItems orderedItem : this.orderedItems) {
-            orderedItems.add(orderedItem.toDTO());
-        }
+    public List<OrderedItems> getOrderedItems() {
         return orderedItems;
     }
 
     public void setOrderedItems(List<OrderedItems> orderedItems) {
         this.orderedItems = orderedItems;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 
     @Override
@@ -100,18 +95,21 @@ public class Orders {
 
         OrdersTO ordersTO = new OrdersTO();
         BeanUtils.copyProperties( this, ordersTO);
-        ordersTO.setIsPaid(this.isPaid());
         Person person = this.getPerson();
         PersonTO personTO = person.toDTO();
-        Restaurants restaurants = this.getRestaurants();
-        RestaurantTO restaurantTO = restaurants.toDTO();
+        Reservation reservation = this.getReservation();
+        ReservationTO reservationTO = reservation.toDTO();
 
-        OrderedItems ordereditems = (OrderedItems) this.getOrderedItems();
-        OrderedItemsTO orderedItemsTO = ordereditems.toDTO();
+        List<OrderedItemsTO> orderedItemsTOS = new ArrayList<>();
+        for (OrderedItems orderedItems : getOrderedItems()) {
+            OrderedItemsTO orderedItemsTO = new OrderedItemsTO();
+            orderedItemsTO = orderedItems.toDTO();
+            orderedItemsTOS.add(orderedItemsTO);
+        }
 
-        ordersTO.setOrderedItems(orderedItemsTO);
+        ordersTO.setOrderedItems(orderedItemsTOS);
         ordersTO.setPerson(personTO);
-        ordersTO.setRestaurants(restaurantTO);
+        ordersTO.setReservation(reservationTO);
         return ordersTO;
     }
 
@@ -120,17 +118,18 @@ public class Orders {
         BeanUtils.copyProperties(ordersTO, ordersToEntity);
         PersonTO personTO = ordersTO.getPerson();
         Person person = Person.toEntity(personTO);
-        RestaurantTO restaurantTO = ordersTO.getRestaurants();
-        Restaurants restaurants = Restaurants.toEntity(restaurantTO);
+        ReservationTO reservationTO = ordersTO.getReservation();
+        Reservation reservation = Reservation.toEntity(reservationTO);
 
-        OrderedItemsTO orderedItemsTO = ordersTO.getOrderedItems();
-        OrderedItems orderedItems = OrderedItems.toEntity(orderedItemsTO);
+        List<OrderedItems> orderedItems = new ArrayList<>();
+        for (OrderedItemsTO orderedItemsTO : ordersTO.getOrderedItems()) {
+            OrderedItems orderedItemstoEntity = OrderedItems.toEntity(orderedItemsTO);
+            orderedItems.add(orderedItemstoEntity);
+        }
 
-        ordersToEntity.setOrderedItems((List<OrderedItems>) orderedItems);
+        ordersToEntity.setOrderedItems(orderedItems);
         ordersToEntity.setPerson(person);
-        ordersToEntity.setRestaurants(restaurants);
+        ordersToEntity.setReservation(reservation);
         return ordersToEntity;
     }
-
-
 }

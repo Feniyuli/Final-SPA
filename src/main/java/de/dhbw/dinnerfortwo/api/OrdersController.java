@@ -1,12 +1,9 @@
 package de.dhbw.dinnerfortwo.api;
 
-import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsService;
-import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsTO;
 import de.dhbw.dinnerfortwo.impl.orders.OrdersService;
 import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +21,12 @@ public class OrdersController {
     public static final String URI_ORDERS_BASE = URI_BASE + "/orders";
 
     private final OrdersService ordersService;
-    private final OrderedItemsService orderedItemsService;
 
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public OrdersController(OrdersService ordersService, OrderedItemsService orderedItemsService) {
+    public OrdersController(OrdersService ordersService) {
         this.ordersService = ordersService;
-        this.orderedItemsService = orderedItemsService;
     }
 
     @GetMapping("/{id}")
@@ -40,17 +35,6 @@ public class OrdersController {
         try {
             var order = ordersService.getOrder(id);
             return ResponseEntity.ok(order);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("ordereditems/{id}")
-    public ResponseEntity<List<OrderedItemsTO>> getAllOrderedItemsByOrderId(@PathVariable long id) {
-        log.info("Get ordered items with order id {}", id);
-        try {
-            var orderedItems = orderedItemsService.getAllOrderedItemsByOrderId(id);
-            return ResponseEntity.ok(orderedItems);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -70,10 +54,16 @@ public class OrdersController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-
-    @PutMapping("payOrder/{id}")
-    public ResponseEntity<OrdersTO> updateOrderIsPaid(@PathVariable Long id) {
-        OrdersTO updatedOrder = ordersService.updateOrderIsPaid(id);
-        return ResponseEntity.ok(updatedOrder);
+    @GetMapping("/total/{id}")
+    public ResponseEntity<Float> getTotalItem(@PathVariable long id){
+        try {
+            var order = ordersService.getOrder(id);
+        } catch (EntityNotFoundException e) {
+            System.out.println("Something went wrong.");
+        }
+        var amount = ordersService.getTotalOrder(id);
+        return new ResponseEntity<>(amount, HttpStatus.OK);
     }
+
+
 }

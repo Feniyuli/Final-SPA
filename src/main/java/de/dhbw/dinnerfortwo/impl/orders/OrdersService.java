@@ -1,15 +1,18 @@
 package de.dhbw.dinnerfortwo.impl.orders;
 
 
+import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItems;
+import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsTO;
+import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,8 +56,7 @@ public class OrdersService {
 
     @Transactional
     public List<OrdersTO> getAllOrdersByRestaurantId(Long id){
-        log.info("Get all orders with the restaurant id {}", id);
-        List<OrdersTO> getAllOrders = ordersRepository.findAllOrdersByRestaurantId(id)
+        List<OrdersTO> getAllOrders = ((List<Orders>) ordersRepository.findAllOrders(id))
                 .stream()
                 .map(Orders::toDTO)
                 .collect(Collectors.toList());
@@ -63,33 +65,30 @@ public class OrdersService {
     }
 
     @Transactional
-    public OrdersTO isPaid(long id) {
-        log.info("Update isPaid attribute to true {}", id);
-        OrdersTO order = getOrder(id);
-        order.setIsPaid(true);
+    public float getTotalRevenue(Long id){
+        List<OrdersTO> allOrders = getAllOrdersByRestaurantId(id);
+        float revenue = 0;
 
-        Orders ordersToEntity = Orders.toEntity(order);
-        Orders savedEntity = ordersRepository.save(ordersToEntity);
-        return savedEntity.toDTO();
+        for(OrdersTO ordersTO: allOrders){
+            if (ordersTO.isPaid() == true) {
+                for (OrderedItemsTO orderedItemsTO : ordersTO.getOrderedItems()) {
+                    revenue = revenue + (orderedItemsTO.getItems().getPrice()*orderedItemsTO.getAmount());
+                }
+            }
+        }
+
+        return revenue;
     }
 
     @Transactional
-    public OrdersTO updateOrderIsPaid(Long id) {
-        Optional<Orders> order = ordersRepository.findById(id);
-        if (order.isPresent()) {
-            Orders updatedOrder = order.get();
-            updatedOrder.setIsPaid(true);
-            updatedOrder = ordersRepository.save(updatedOrder);
-            return orderToTO(updatedOrder);
-        } else {
-            throw new NotFoundException("could not find order with id {" + id + "}.");
-        }
-    }
+    public float getTotalOrder(long id){
+        OrdersTO orders = getOrder(id);
+        List<OrderedItemsTO> orderedItems = orders.getOrderedItems();
+        float amount = 0;
 
-    private OrdersTO orderToTO(Orders order) {
-        OrdersTO orderTO = new OrdersTO();
-        orderTO.setId(order.getId());
-        orderTO.setIsPaid(order.isPaid());
-        return orderTO;
+        for (OrderedItemsTO orderedItemsTO : orders.getOrderedItems()) {
+            amount = amount + (orderedItemsTO.getItems().getPrice()*orderedItemsTO.getAmount());
+        }
+        return amount;
     }
 }

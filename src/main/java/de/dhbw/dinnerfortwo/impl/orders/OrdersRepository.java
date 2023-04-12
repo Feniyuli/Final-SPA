@@ -9,6 +9,12 @@ import java.util.List;
 
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders,Long> {
-    @Query(value = "SELECT o FROM Orders o WHERE o.restaurants.id = :id")
-    List<Orders> findAllOrdersByRestaurantId(Long id);
+    @Query(value = """
+      SELECT t FROM Orders t INNER JOIN Reservation u \s
+      ON t.reservation.id = u.id\s
+      INNER JOIN Tables b \s 
+      ON u.table.id = b.id\s
+      WHERE b.restaurants.id = :id\s
+      """)
+    List<Orders> findAllOrders(Long id);
 }
