@@ -65,5 +65,10 @@ public class OrdersController {
         return new ResponseEntity<>(amount, HttpStatus.OK);
     }
 
+    @PutMapping("payOrder/{id}")
+    public ResponseEntity<OrdersTO> updateOrderIsPaid(@PathVariable Long id) {
+        OrdersTO updatedOrder = ordersService.updateOrderIsPaid(id);
+        return ResponseEntity.ok(updatedOrder);
+    }
 
 }

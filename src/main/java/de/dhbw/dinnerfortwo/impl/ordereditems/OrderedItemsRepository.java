@@ -10,6 +10,4 @@ import java.util.List;
 
 @Repository
 public interface OrderedItemsRepository extends JpaRepository<OrderedItems,Long> {
-    @Query(value = "SELECT oi FROM OrderedItems oi WHERE oi.orders.id = :id")
-    List<OrderedItems> getAllOrderedItemsByOrderId(Long id);
 }

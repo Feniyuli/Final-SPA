@@ -50,15 +50,4 @@ public class OrderedItemsService {
         return savedEntity.toDTO();
     }
 
-    @Transactional
-    public List<OrderedItemsTO> getAllOrderedItemsByOrderId(Long id){
-        log.info("Get all ordered Items by order id");
-
-        List<OrderedItemsTO> getAllOrderedItems= ((List<OrderedItems>) orderedItemsRepository.getAllOrderedItemsByOrderId(id))
-                .stream()
-                .map(OrderedItems::toDTO)
-                .collect(Collectors.toList());
-
-        return getAllOrderedItems;
-    }
 }

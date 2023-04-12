@@ -95,6 +95,7 @@ public class Orders {
 
         OrdersTO ordersTO = new OrdersTO();
         BeanUtils.copyProperties( this, ordersTO);
+        ordersTO.setPaid(this.isPaid());
         Person person = this.getPerson();
         PersonTO personTO = person.toDTO();
         Reservation reservation = this.getReservation();
