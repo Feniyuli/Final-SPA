@@ -17,4 +17,10 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
       WHERE b.restaurants.id = :id\s
       """)
     List<Orders> findAllOrders(Long id);
+
+    @Query(value = """
+      SELECT t FROM Orders t\s
+      WHERE t.reservation.id = :id\s
+      """)
+    List<Orders> findOrderReserved(Long id);
 }

@@ -122,4 +122,14 @@ public class OrdersService {
         }
         return amount;
     }
+
+    @Transactional
+    public List<OrdersTO> getOrderReserved(long id){
+        List<OrdersTO> getAllOrders = ((List<Orders>) ordersRepository.findOrderReserved(id))
+                .stream()
+                .map(Orders::toDTO)
+                .collect(Collectors.toList());
+
+        return getAllOrders;
+    }
 }

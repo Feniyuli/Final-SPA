@@ -1,22 +1,28 @@
 package de.dhbw.dinnerfortwo.impl.table;
 
-import de.dhbw.dinnerfortwo.impl.item.Items;
-import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationRepository;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class TablesService {
 
-    private final de.dhbw.dinnerfortwo.impl.table.TablesRepository tablesRepository;
-    public TablesService(de.dhbw.dinnerfortwo.impl.table.TablesRepository tablesRepository) {
+    private final TablesRepository tablesRepository;
+    private final ReservationService reservationService;
+
+    public TablesService(TablesRepository tablesRepository, ReservationService reservationService) {
         this.tablesRepository = tablesRepository;
+        this.reservationService = reservationService;
     }
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -60,4 +66,30 @@ public class TablesService {
 
         return getAllTables;
     }
+
+    @Transactional
+    public List<TablesTO> getAvailableTables(Long id, LocalDate localDate){
+        List <TablesTO> tables = getTablesByRestaurantId(id);
+        List <ReservationTO> reservation = reservationService.getAllReservationByRestaurantId(id);
+        List <TablesTO> takenTables = new ArrayList<>();
+        List <TablesTO> availableTable = new ArrayList<>(tables);
+
+        for(ReservationTO reservationTO : reservation){
+            if(reservationTO.getDate().equals(localDate)) {
+                takenTables.add(reservationTO.getTable());
+            }
+        }
+
+        for (TablesTO tablesTO: tables){
+            for(TablesTO taken : takenTables){
+                if(tablesTO.getId() == taken.getId()){
+                    availableTable.remove(tablesTO);
+                    break;
+                }
+            }
+        }
+
+        return availableTable;
+    }
+
 }

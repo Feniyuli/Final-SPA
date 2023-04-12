@@ -12,10 +12,12 @@ import de.dhbw.dinnerfortwo.impl.table.TablesService;
 import de.dhbw.dinnerfortwo.impl.table.TablesTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
@@ -124,4 +126,15 @@ public class RestaurantsController {
         return new ResponseEntity<>(revenue, HttpStatus.OK);
     }
 
+    @GetMapping("/availTables/{id}")
+    public ResponseEntity<List<TablesTO>> getAvailableTables(@PathVariable("id")Long id, @RequestParam("localDate")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate localDate){
+        log.info("Get available tables with id {}");
+        try {
+            var tablesByRestaurantId = tablesService.getAvailableTables(id, localDate);
+            return ResponseEntity.ok(tablesByRestaurantId);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

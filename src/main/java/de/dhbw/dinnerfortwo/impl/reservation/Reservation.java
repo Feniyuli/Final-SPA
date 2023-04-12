@@ -8,22 +8,28 @@ import de.dhbw.dinnerfortwo.impl.table.TablesTO;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 public class Reservation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false)
     private boolean arrive;
     @Column(nullable = false)
-    private Date date;
+    private LocalDate date;
     @Column(name = "fromTime", nullable = false)
-    private Timestamp from;
+    private Timestamp fromTime;
     @Column(name = "toTime", nullable = false)
-    private Timestamp to;
+    private Timestamp toTime;
+    @Column(nullable = false)
+    private Date reservationDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "guest", referencedColumnName = "id")
@@ -37,16 +43,29 @@ public class Reservation {
     public Reservation (){
     }
 
-    public Reservation(long id, Person person, Tables table, boolean arrive, Date date, Timestamp from, Timestamp to, Reservation reservation){
-        this.id = id;
-        this.person = person;
-        this.table = table;
-        this.arrive = arrive;
-        this.date = date;
-        this.from = from;
-        this.to = to;
+    public Timestamp getFromTime() {
+        return fromTime;
     }
 
+    public void setFromTime(Timestamp fromTime) {
+        this.fromTime = fromTime;
+    }
+
+    public Timestamp getToTime() {
+        return toTime;
+    }
+
+    public void setToTime(Timestamp toTime) {
+        this.toTime = toTime;
+    }
+
+    public Date getReservationDate() {
+        return reservationDate;
+    }
+
+    public void setReservationDate(Date reservationDate) {
+        this.reservationDate = reservationDate;
+    }
 
     public long getId() {
         return id;
@@ -64,28 +83,12 @@ public class Reservation {
         this.arrive = arrive;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public Timestamp getFrom() {
-        return from;
-    }
-
-    public void setFrom(Timestamp from) {
-        this.from = from;
-    }
-
-    public Timestamp getTo() {
-        return to;
-    }
-
-    public void setTo(Timestamp to) {
-        this.to = to;
     }
 
     public Person getPerson() {

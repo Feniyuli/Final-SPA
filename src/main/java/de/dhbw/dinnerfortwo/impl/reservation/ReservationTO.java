@@ -4,29 +4,47 @@ import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 import de.dhbw.dinnerfortwo.impl.table.Tables;
 import de.dhbw.dinnerfortwo.impl.table.TablesTO;
 
-import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 
 public class ReservationTO {
     private long id;
     private PersonTO person;
     private TablesTO table;
     private boolean arrive;
-    private Date date;
-    private Timestamp from;
-    private Timestamp to;
+    private LocalDate date;
+    private Timestamp fromTime;
+    private Timestamp toTime;
+    private Date reservationDate;
 
     public ReservationTO(){
     }
 
-    public ReservationTO (long id, PersonTO person, TablesTO table, boolean arrive, Date date, Timestamp from, Timestamp to){
-        this.id = id;
-        this.person = person;
-        this.table = table;
-        this.arrive = arrive;
-        this.date = date;
-        this.from = from;
-        this.to = to;
+    public Timestamp getFromTime() {
+        return fromTime;
+    }
+
+    public void setFromTime(Timestamp fromTime) {
+        this.fromTime = fromTime;
+    }
+
+    public Timestamp getToTime() {
+        return toTime;
+    }
+
+    public void setToTime(Timestamp toTime) {
+        this.toTime = toTime;
+    }
+
+    public Date getReservationDate() {
+        return reservationDate;
+    }
+
+    public void setReservationDate(Date reservationDate) {
+        this.reservationDate = reservationDate;
     }
 
     public long getId() {
@@ -61,27 +79,11 @@ public class ReservationTO {
         this.arrive = arrive;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public Timestamp getFrom() {
-        return from;
-    }
-
-    public void setFrom(Timestamp from) {
-        this.from = from;
-    }
-
-    public Timestamp getTo() {
-        return to;
-    }
-
-    public void setTo(Timestamp to) {
-        this.to = to;
     }
 }

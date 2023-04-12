@@ -24,9 +24,6 @@ public class Orders {
     @Column(nullable = false)
     private boolean isPaid;
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "person", referencedColumnName = "id")
-    private Person person;
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "reservation", referencedColumnName = "id")
     private Reservation reservation;
     @OneToMany(targetEntity = OrderedItems.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
@@ -45,13 +42,6 @@ public class Orders {
         this.id = id;
     }
 
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
 
     public boolean isPaid() {
         return isPaid;
@@ -96,8 +86,6 @@ public class Orders {
         OrdersTO ordersTO = new OrdersTO();
         BeanUtils.copyProperties( this, ordersTO);
         ordersTO.setPaid(this.isPaid());
-        Person person = this.getPerson();
-        PersonTO personTO = person.toDTO();
         Reservation reservation = this.getReservation();
         ReservationTO reservationTO = reservation.toDTO();
 
@@ -109,7 +97,6 @@ public class Orders {
         }
 
         ordersTO.setOrderedItems(orderedItemsTOS);
-        ordersTO.setPerson(personTO);
         ordersTO.setReservation(reservationTO);
         return ordersTO;
     }
@@ -117,8 +104,6 @@ public class Orders {
     public static Orders toEntity(OrdersTO ordersTO){
         Orders ordersToEntity = new Orders();
         BeanUtils.copyProperties(ordersTO, ordersToEntity);
-        PersonTO personTO = ordersTO.getPerson();
-        Person person = Person.toEntity(personTO);
         ReservationTO reservationTO = ordersTO.getReservation();
         Reservation reservation = Reservation.toEntity(reservationTO);
 
@@ -129,7 +114,6 @@ public class Orders {
         }
 
         ordersToEntity.setOrderedItems(orderedItems);
-        ordersToEntity.setPerson(person);
         ordersToEntity.setReservation(reservation);
         return ordersToEntity;
     }

@@ -1,7 +1,7 @@
 package de.dhbw.dinnerfortwo.api;
 
-import de.dhbw.dinnerfortwo.impl.person.Person;
-import de.dhbw.dinnerfortwo.impl.person.PersonTO;
+import de.dhbw.dinnerfortwo.impl.orders.OrdersService;
+import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import org.slf4j.Logger;
@@ -26,11 +26,13 @@ public class ReservationController {
     public static final String URI_RESERVATION_BASE = URI_BASE + "/reservation";
 
     private final ReservationService reservationService;
+    private final OrdersService ordersService;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, OrdersService ordersService) {
         this.reservationService = reservationService;
+        this.ordersService = ordersService;
     }
 
 
@@ -59,6 +61,15 @@ public class ReservationController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-
+    @GetMapping("/order/{id}")
+    public ResponseEntity<List<OrdersTO>> getOrderReserved(@PathVariable long id) {
+        log.info("Get order with id {}", id);
+        try {
+            var orders = ordersService.getOrderReserved(id);
+            return ResponseEntity.ok(orders);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
