@@ -1,6 +1,8 @@
 package de.dhbw.dinnerfortwo.impl.orders;
 
 
+import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItems;
+import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsTO;
 import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,11 +56,39 @@ public class OrdersService {
 
     @Transactional
     public List<OrdersTO> getAllOrdersByRestaurantId(Long id){
-        List<OrdersTO> getAllOrders = ((List<Orders>) ordersRepository.findAllOrdersByRestaurantId(id))
+        List<OrdersTO> getAllOrders = ((List<Orders>) ordersRepository.findAllOrders(id))
                 .stream()
                 .map(Orders::toDTO)
                 .collect(Collectors.toList());
 
         return getAllOrders;
+    }
+
+    @Transactional
+    public float getTotalRevenue(Long id){
+        List<OrdersTO> allOrders = getAllOrdersByRestaurantId(id);
+        float revenue = 0;
+
+        for(OrdersTO ordersTO: allOrders){
+            if (ordersTO.isPaid() == true) {
+                for (OrderedItemsTO orderedItemsTO : ordersTO.getOrderedItems()) {
+                    revenue = revenue + (orderedItemsTO.getItems().getPrice()*orderedItemsTO.getAmount());
+                }
+            }
+        }
+
+        return revenue;
+    }
+
+    @Transactional
+    public float getTotalOrder(long id){
+        OrdersTO orders = getOrder(id);
+        List<OrderedItemsTO> orderedItems = orders.getOrderedItems();
+        float amount = 0;
+
+        for (OrderedItemsTO orderedItemsTO : orders.getOrderedItems()) {
+            amount = amount + (orderedItemsTO.getItems().getPrice()*orderedItemsTO.getAmount());
+        }
+        return amount;
     }
 }

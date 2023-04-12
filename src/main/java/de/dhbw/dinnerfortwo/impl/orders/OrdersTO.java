@@ -1,23 +1,29 @@
 package de.dhbw.dinnerfortwo.impl.orders;
 
+import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsTO;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
+import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
+
+import java.util.List;
 
 public class OrdersTO {
     private long id;
     private boolean isPaid;
     private PersonTO person;
-    private RestaurantTO restaurants;
+    private ReservationTO reservation;
+    private List<OrderedItemsTO> orderedItems;
 
     public OrdersTO() {
     }
 
-    public OrdersTO(long id, boolean isPaid, PersonTO person, RestaurantTO restaurants) {
+    public OrdersTO(long id, boolean isPaid, PersonTO person, ReservationTO reservation, List<OrderedItemsTO> orderedItems) {
         this.id = id;
         this.isPaid = isPaid;
         this.person = person;
-        this.restaurants = restaurants;
+        this.reservation = reservation;
+        this.orderedItems = orderedItems;
     }
 
     public boolean isPaid() {
@@ -26,14 +32,6 @@ public class OrdersTO {
 
     public void setPaid(boolean paid) {
         isPaid = paid;
-    }
-
-    public RestaurantTO getRestaurants() {
-        return restaurants;
-    }
-
-    public void setRestaurants(RestaurantTO restaurants) {
-        this.restaurants = restaurants;
     }
 
     public long getId() {
@@ -50,4 +48,19 @@ public class OrdersTO {
 
     public void setPerson(PersonTO person) {this.person = person; }
 
+    public List<OrderedItemsTO> getOrderedItems() {
+        return orderedItems;
+    }
+
+    public void setOrderedItems(List<OrderedItemsTO> orderedItems) {
+        this.orderedItems = orderedItems;
+    }
+
+    public ReservationTO getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(ReservationTO reservation) {
+        this.reservation = reservation;
+    }
 }

@@ -113,4 +113,15 @@ public class RestaurantsController {
         }
     }
 
+    @GetMapping("/revenue/{id}")
+    public ResponseEntity<Float> getRevenue(@PathVariable long id){
+        try {
+            var resto = restaurantsService.getResto(id);
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Not found");
+        }
+        var revenue = ordersService.getTotalRevenue(id);
+        return new ResponseEntity<>(revenue, HttpStatus.OK);
+    }
+
 }

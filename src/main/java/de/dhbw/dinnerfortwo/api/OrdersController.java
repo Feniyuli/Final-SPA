@@ -54,4 +54,16 @@ public class OrdersController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    @GetMapping("/total/{id}")
+    public ResponseEntity<Float> getTotalItem(@PathVariable long id){
+        try {
+            var order = ordersService.getOrder(id);
+        } catch (EntityNotFoundException e) {
+            System.out.println("Something went wrong.");
+        }
+        var amount = ordersService.getTotalOrder(id);
+        return new ResponseEntity<>(amount, HttpStatus.OK);
+    }
+
+
 }

@@ -11,6 +11,8 @@ import java.util.Objects;
 
 @Entity
 public class OrderedItems {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
     @Column(nullable = false)
@@ -18,18 +20,14 @@ public class OrderedItems {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "items", referencedColumnName = "id")
     private Items items;
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "orders", referencedColumnName = "id")
-    private Orders orders;
 
     public OrderedItems() {
     }
 
-    public OrderedItems(long id, int amount, Items items, Orders orders) {
+    public OrderedItems(long id, int amount, Items items) {
         this.id = id;
         this.amount = amount;
         this.items = items;
-        this.orders = orders;
     }
 
     public long getId() {
@@ -55,13 +53,6 @@ public class OrderedItems {
     public void setItems(Items items) {
         this.items = items;
     }
-    public Orders getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Orders orders) {
-        this.orders = orders;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -82,11 +73,8 @@ public class OrderedItems {
         BeanUtils.copyProperties( this, orderedItemsTO);
         Items items = this.getItems();
         ItemsTO itemTO = items.toDTO();
-        Orders orders = this.getOrders();
-        OrdersTO ordersTO = orders.toDTO();
 
         orderedItemsTO.setItems(itemTO);
-        orderedItemsTO.setOrders(ordersTO);
 
         return orderedItemsTO;
     }
@@ -96,11 +84,8 @@ public class OrderedItems {
         BeanUtils.copyProperties(orderedItemsTO, orderedItemsToEntity);
         ItemsTO itemTO = orderedItemsTO.getItems();
         Items items = Items.toEntity(itemTO);
-        OrdersTO ordersTO = orderedItemsTO.getOrders();
-        Orders orders = Orders.toEntity(ordersTO);
 
         orderedItemsToEntity.setItems(items);
-        orderedItemsToEntity.setOrders(orders);
 
         return orderedItemsToEntity;
     }
