@@ -71,4 +71,22 @@ public class OrdersController {
         return ResponseEntity.ok(updatedOrder);
     }
 
+    @PutMapping("onProcess/{id}")
+    public ResponseEntity<OrdersTO> onProcess(@PathVariable Long id) {
+        OrdersTO updatedOrder = ordersService.onProcess(id);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @PutMapping("ready/{id}")
+    public ResponseEntity<OrdersTO> ready (@PathVariable Long id) {
+        OrdersTO updatedOrder = ordersService.ready(id);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @PutMapping("delivered/{id}")
+    public ResponseEntity<OrdersTO> delivered (@PathVariable Long id) {
+        OrdersTO updatedOrder = ordersService.delivered(id);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
 }

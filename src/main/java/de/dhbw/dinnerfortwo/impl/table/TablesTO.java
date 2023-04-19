@@ -5,15 +5,18 @@ import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 public class TablesTO {
     private long id;
     private int capacity;
+    private int tableNumber;
     private RestaurantTO restaurants;
 
     public TablesTO() {
     }
 
-    public TablesTO(long id, int capacity, RestaurantTO restaurants) {
-        this.id = id;
-        this.capacity = capacity;
-        this.restaurants = restaurants;
+    public int getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(int tableNumber) {
+        this.tableNumber = tableNumber;
     }
 
     public long getId() {

@@ -1,5 +1,10 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -51,4 +56,9 @@ public class PersonService {
 
         return savedEntity.toDTO();
     }
+
+    public Person getPersonByEmailAndPassword(String email, String password) {
+        return personRepository.getPersonByEmailAndPassword(email, password);
+    }
+
 }

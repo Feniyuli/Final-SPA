@@ -11,7 +11,7 @@ import java.util.Objects;
 @Entity
 public class Restaurants {
     @Id
-    //    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)

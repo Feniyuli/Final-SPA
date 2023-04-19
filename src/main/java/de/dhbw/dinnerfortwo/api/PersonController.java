@@ -1,7 +1,6 @@
 package de.dhbw.dinnerfortwo.api;
 
-import de.dhbw.dinnerfortwo.impl.person.PersonService;
-import de.dhbw.dinnerfortwo.impl.person.PersonTO;
+import de.dhbw.dinnerfortwo.impl.person.*;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
@@ -13,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
 import static de.dhbw.dinnerfortwo.api.PersonController.URI_OWNER_BASE;
@@ -85,6 +86,21 @@ public class PersonController {
             return ResponseEntity.ok(restaurantsByOwnerId);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
+
+        Person person = personService.getPersonByEmailAndPassword(email, password);
+
+        if (person != null) {
+            session.setAttribute("user", person);
+            return ResponseEntity.ok(new LoginResponse(true, person));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(false, null));
         }
     }
 

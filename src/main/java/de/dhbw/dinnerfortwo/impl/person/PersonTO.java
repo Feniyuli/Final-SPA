@@ -5,17 +5,18 @@ public class PersonTO {
     private String name;
     private String address;
     private String email;
+    private String password;
     private Type type;
 
     public PersonTO() {
     }
 
-    public PersonTO(long id, String name, String address, String email, Type type) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.email = email;
-        this.type = type;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public long getId() {

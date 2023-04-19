@@ -2,13 +2,9 @@ package de.dhbw.dinnerfortwo.impl.orders;
 
 import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItems;
 import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsTO;
-import de.dhbw.dinnerfortwo.impl.person.Person;
-import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 
 import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
@@ -29,10 +25,19 @@ public class Orders {
     @OneToMany(targetEntity = OrderedItems.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
     @JoinColumn(name = "orderedItems", referencedColumnName = "id")
     private List<OrderedItems> orderedItems;
+    @Column(nullable = false)
+    private OrderStatus orderStatus;
 
     public Orders() {
     }
 
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
     public long getId() {
         return id;

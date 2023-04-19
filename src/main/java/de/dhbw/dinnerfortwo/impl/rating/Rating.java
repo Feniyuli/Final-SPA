@@ -17,13 +17,14 @@ import java.util.Objects;
 @Entity
 public class Rating {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false)
     private int rating;
+    private String comment;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "restaurants", referencedColumnName = "id")
     private Restaurants restaurants;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "guest", referencedColumnName = "id")
     private Person person;
@@ -31,11 +32,12 @@ public class Rating {
     public Rating(){
     }
 
-    public Rating(long id, int rating, Restaurants restaurants, Person person){
-        this.id = id;
-        this.rating = rating;
-        this.restaurants = restaurants;
-        this.person = person;
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public long getId() {

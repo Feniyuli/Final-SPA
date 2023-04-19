@@ -11,20 +11,25 @@ import java.util.Objects;
 @Entity
 public class Tables {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false)
     private int capacity;
+    @Column(nullable = false)
+    private int tableNumber;
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "restaurant", referencedColumnName = "id")
     private Restaurants restaurants;
 
-    public Tables(long id, int capacity, Restaurants restaurants) {
-        this.id = id;
-        this.capacity = capacity;
-        this.restaurants = restaurants;
+    public Tables() {
     }
 
-    public Tables() {
+    public int getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(int tableNumber) {
+        this.tableNumber = tableNumber;
     }
 
     public long getId() {

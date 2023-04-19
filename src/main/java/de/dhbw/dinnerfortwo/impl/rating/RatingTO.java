@@ -6,17 +6,19 @@ import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 public class RatingTO {
     private long id;
     private int rating;
+    private String comment;
     private PersonTO person;
     private RestaurantTO restaurants;
 
     public RatingTO(){
     }
 
-    public RatingTO(long id, int rating, PersonTO person, RestaurantTO restaurants){
-        this.id = id;
-        this.rating = rating;
-        this.person = person;
-        this.restaurants = restaurants;
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public long getId() {

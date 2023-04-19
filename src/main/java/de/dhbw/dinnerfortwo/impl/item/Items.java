@@ -11,6 +11,7 @@ import java.util.Objects;
 @Entity
 public class Items {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false)
     private String name;

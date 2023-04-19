@@ -3,15 +3,13 @@ package de.dhbw.dinnerfortwo.impl.person;
 
 import org.springframework.beans.BeanUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 public class Person {
     @Id
-    //    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false)
@@ -24,17 +22,20 @@ public class Person {
     private String email;
 
     @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private Type type;
 
     public Person() {
     }
 
-    public Person(long id, String name, String address, String email, Type type) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.email = email;
-        this.type = type;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public long getId() {

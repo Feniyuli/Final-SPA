@@ -1,10 +1,7 @@
 package de.dhbw.dinnerfortwo.impl.orders;
 
 
-import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItems;
 import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsTO;
-import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
-import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,7 +9,6 @@ import org.webjars.NotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -132,4 +128,41 @@ public class OrdersService {
 
         return getAllOrders;
     }
+
+    @Transactional
+    public OrdersTO onProcess (Long id){
+        Orders ordersById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
+        OrdersTO order = getOrder(id);
+        if(order.getOrderStatus() == OrderStatus.Open){
+            order.setOrderStatus(OrderStatus.OnProcess);
+        }
+        Orders ordersToEntity = Orders.toEntity(order);
+        Orders savedEntity = ordersRepository.save(ordersToEntity);
+        return savedEntity.toDTO();
+    }
+
+    @Transactional
+    public OrdersTO ready (Long id){
+        Orders ordersById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
+        OrdersTO order = getOrder(id);
+        if(order.getOrderStatus() == OrderStatus.OnProcess){
+            order.setOrderStatus(OrderStatus.Ready);
+        }
+        Orders ordersToEntity = Orders.toEntity(order);
+        Orders savedEntity = ordersRepository.save(ordersToEntity);
+        return savedEntity.toDTO();
+    }
+
+    @Transactional
+    public OrdersTO delivered (Long id){
+        Orders ordersById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
+        OrdersTO order = getOrder(id);
+        if(order.getOrderStatus() == OrderStatus.Ready){
+            order.setOrderStatus(OrderStatus.Delivered);
+        }
+        Orders ordersToEntity = Orders.toEntity(order);
+        Orders savedEntity = ordersRepository.save(ordersToEntity);
+        return savedEntity.toDTO();
+    }
+
 }

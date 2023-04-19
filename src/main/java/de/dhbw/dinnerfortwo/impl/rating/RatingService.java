@@ -43,7 +43,6 @@ public class RatingService {
                 .stream()
                 .map(Rating::toDTO)
                 .collect(Collectors.toList());
-        ;
 
         return getAllRatings;
     }
@@ -56,6 +55,30 @@ public class RatingService {
         Rating savedEntity = ratingRepository.save(ratingTO);
 
         return savedEntity.toDTO();
+    }
+
+    @Transactional
+    public List<RatingTO> getRestaurantRating(long id){
+        List<RatingTO> getAllRatings = ((List<Rating>) ratingRepository.findAllRatinginRestaurant(id))
+                .stream()
+                .map(Rating::toDTO)
+                .collect(Collectors.toList());
+
+        return getAllRatings;
+    }
+
+    @Transactional
+    public float getAverageRating(long id){
+        List<RatingTO> getAllRatings = getRestaurantRating(id);
+        int number = 0;
+        float average = 0;
+
+        for(RatingTO ratingTO: getAllRatings){
+            average = average + ratingTO.getRating();
+            number++;
+        }
+
+        return average / number;
     }
 
 }

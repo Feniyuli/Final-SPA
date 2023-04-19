@@ -1,8 +1,12 @@
 package de.dhbw.dinnerfortwo.impl.table;
 
+import de.dhbw.dinnerfortwo.impl.orders.OrderStatus;
+import de.dhbw.dinnerfortwo.impl.orders.Orders;
+import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationRepository;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -90,6 +94,22 @@ public class TablesService {
         }
 
         return availableTable;
+    }
+
+    @Transactional
+    public TablesTO updateTable (Long id, TablesTO tablesTO){
+        Tables tableEntity = tablesRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find table"));
+        tableEntity.setTableNumber(tablesTO.getTableNumber());
+        tableEntity.setCapacity(tablesTO.getCapacity());
+
+        Tables savedEntity = tablesRepository.save(tableEntity);
+        return savedEntity.toDTO();
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        log.info("Deleting table with id {}", id);
+        tablesRepository.deleteById(id);
     }
 
 }

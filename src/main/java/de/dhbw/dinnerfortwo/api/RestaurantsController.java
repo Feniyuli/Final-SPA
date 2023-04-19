@@ -4,6 +4,8 @@ import de.dhbw.dinnerfortwo.impl.item.ItemsService;
 import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
 import de.dhbw.dinnerfortwo.impl.orders.OrdersService;
 import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
+import de.dhbw.dinnerfortwo.impl.rating.RatingService;
+import de.dhbw.dinnerfortwo.impl.rating.RatingTO;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
@@ -34,16 +36,18 @@ public class RestaurantsController {
     private final ReservationService reservationService;
     private final OrdersService ordersService;
     private final TablesService tablesService;
+    private final RatingService ratingService;
 
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public RestaurantsController(RestaurantsService restaurantsService, ItemsService itemsService, ReservationService reservationService, OrdersService ordersService, TablesService tablesService) {
+    public RestaurantsController(RestaurantsService restaurantsService, ItemsService itemsService, ReservationService reservationService, OrdersService ordersService, TablesService tablesService, RatingService ratingService) {
         this.restaurantsService = restaurantsService;
         this.itemsService = itemsService;
         this.reservationService = reservationService;
         this.ordersService = ordersService;
         this.tablesService = tablesService;
+        this.ratingService = ratingService;
     }
 
     @GetMapping("/{id}")
@@ -136,5 +140,26 @@ public class RestaurantsController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/rating/{id}")
+    public ResponseEntity<List<RatingTO>> getAllRating(@PathVariable("id")Long id) {
+        try {
+            var rating = ratingService.getRestaurantRating(id);
+            return ResponseEntity.ok(rating);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/averageRating/{id}")
+    public ResponseEntity<Float> getAverageRating(@PathVariable("id")Long id){
+        try {
+            var resto = restaurantsService.getResto(id);
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Not found");
+        }
+        var average = ratingService.getAverageRating(id);
+        return new ResponseEntity<>(average, HttpStatus.OK);
     }
 }
