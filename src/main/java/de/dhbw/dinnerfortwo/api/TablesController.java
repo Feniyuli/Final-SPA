@@ -55,14 +55,14 @@ public class TablesController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TablesTO> updateOwner(@PathVariable Long id, @RequestBody TablesTO tablesTO) {
+    public ResponseEntity<TablesTO> updateTable(@PathVariable Long id, @RequestBody TablesTO tablesTO) {
         TablesTO result = tablesService.updateTable(id, tablesTO);
         log.info("updated table {}", result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOwner(@PathVariable Long id) {
+    public void deleteTable(@PathVariable Long id) {
         tablesService.delete(id);
     }
 

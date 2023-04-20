@@ -61,15 +61,6 @@ public class OrdersService {
 
         return getAllOrders;
     }
-    @Transactional
-    public OrdersTO isPaid(long id) {
-        log.info("Update isPaid attribute to true {}", id);
-        OrdersTO order = getOrder(id);
-        order.setPaid(true);
-        Orders ordersToEntity = Orders.toEntity(order);
-        Orders savedEntity = ordersRepository.save(ordersToEntity);
-        return savedEntity.toDTO();
-    }
 
     @Transactional
     public OrdersTO updateOrderIsPaid(Long id) {
@@ -78,17 +69,10 @@ public class OrdersService {
             Orders updatedOrder = order.get();
             updatedOrder.setPaid(true);
             updatedOrder = ordersRepository.save(updatedOrder);
-            return orderToTO(updatedOrder);
+            return updatedOrder.toDTO();
         } else {
             throw new NotFoundException("could not find order with id {" + id + "}.");
         }
-    }
-
-    private OrdersTO orderToTO(Orders order) {
-        OrdersTO orderTO = new OrdersTO();
-        orderTO.setId(order.getId());
-        orderTO.setPaid(order.isPaid());
-        return orderTO;
     }
 
     @Transactional

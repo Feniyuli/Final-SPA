@@ -1,5 +1,6 @@
 package de.dhbw.dinnerfortwo.impl.restaurants;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.dhbw.dinnerfortwo.impl.person.Person;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +17,7 @@ public class Restaurants {
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "owner", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Person owner;
 
     @Column(nullable = false)

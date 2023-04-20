@@ -72,4 +72,10 @@ public class ReservationController {
         }
     }
 
+    @PutMapping("arrive/{id}")
+    public ResponseEntity<ReservationTO> arrive(@PathVariable Long id) {
+        ReservationTO updatedReservation = reservationService.arrive(id);
+        return ResponseEntity.ok(updatedReservation);
+    }
+
 }

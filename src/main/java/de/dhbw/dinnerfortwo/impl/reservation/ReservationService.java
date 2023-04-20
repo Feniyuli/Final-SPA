@@ -1,5 +1,7 @@
 package de.dhbw.dinnerfortwo.impl.reservation;
 
+import de.dhbw.dinnerfortwo.impl.orders.Orders;
+import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.person.Person;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
@@ -7,10 +9,12 @@ import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -78,6 +82,19 @@ public class ReservationService {
                 .collect(Collectors.toList());
 
         return getAllRes;
+    }
+
+    @Transactional
+    public ReservationTO arrive (Long id) {
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+        if (reservation.isPresent()) {
+            Reservation updatedReservation = reservation.get();
+            updatedReservation.setArrive(true);
+            updatedReservation = reservationRepository.save(updatedReservation);
+            return updatedReservation.toDTO();
+        } else {
+            throw new NotFoundException("could not find reservation with id {" + id + "}.");
+        }
     }
 
 }

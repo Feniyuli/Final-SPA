@@ -1,5 +1,7 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
+import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
+
 public class PersonTO {
     private long id;
     private String name;
@@ -7,8 +9,17 @@ public class PersonTO {
     private String email;
     private String password;
     private Type type;
+    private RestaurantTO workplace;
 
     public PersonTO() {
+    }
+
+    public RestaurantTO getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(RestaurantTO workplace) {
+        this.workplace = workplace;
     }
 
     public String getPassword() {

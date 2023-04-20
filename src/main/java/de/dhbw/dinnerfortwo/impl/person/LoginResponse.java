@@ -1,7 +1,10 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 public class LoginResponse {
     private boolean success;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Person person;
 
     public LoginResponse(boolean success, Person person) {
