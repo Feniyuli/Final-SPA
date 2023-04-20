@@ -1,5 +1,7 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 
 public class PersonTO {
@@ -9,16 +11,16 @@ public class PersonTO {
     private String email;
     private String password;
     private Type type;
-    private RestaurantTO workplace;
+    private int workplace;
 
     public PersonTO() {
     }
 
-    public RestaurantTO getWorkplace() {
+    public int getWorkplace() {
         return workplace;
     }
 
-    public void setWorkplace(RestaurantTO workplace) {
+    public void setWorkplace(int workplace) {
         this.workplace = workplace;
     }
 

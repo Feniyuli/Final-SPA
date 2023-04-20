@@ -5,6 +5,7 @@ import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantsService;
+import de.dhbw.dinnerfortwo.impl.table.TablesTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import org.springframework.web.bind.annotation.*;
 
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
 import static de.dhbw.dinnerfortwo.api.PersonController.URI_OWNER_BASE;
@@ -60,6 +60,13 @@ public class PersonController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/staffs")
+    public ResponseEntity<List<PersonTO>> getAllStaff() {
+        log.info("Get all Staff");
+        var result = personService.getAllStaff();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<PersonTO> createPerson(@RequestBody PersonTO newPerson) {
         PersonTO result = personService.create(newPerson);
@@ -94,7 +101,7 @@ public class PersonController {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
-        Person person = personService.getPersonByEmailAndPassword(email, password);
+        PersonTO person = personService.getPersonByEmailAndPassword(email, password);
 
         if (person != null) {
             session.setAttribute("user", person);
@@ -102,6 +109,13 @@ public class PersonController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(false, null));
         }
+    }
+
+    @PutMapping("/addWorker/{id}")
+    public ResponseEntity<PersonTO> addWorker(@PathVariable Long id, @RequestBody PersonTO personTO) {
+        PersonTO result = personService.addWorker(id, personTO);
+        log.info("updated person {}", result);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

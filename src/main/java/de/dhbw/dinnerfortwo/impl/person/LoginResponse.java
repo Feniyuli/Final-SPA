@@ -1,14 +1,15 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 public class LoginResponse {
     private boolean success;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Person person;
+    private PersonTO person;
 
-    public LoginResponse(boolean success, Person person) {
+    public LoginResponse(boolean success, PersonTO person) {
         this.success = success;
+        this.person = person;
+    }
+
+    public void setPerson(PersonTO person) {
         this.person = person;
     }
 
@@ -20,11 +21,7 @@ public class LoginResponse {
         this.success = success;
     }
 
-    public Person getPerson() {
+    public PersonTO getPerson() {
         return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 }

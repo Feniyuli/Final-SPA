@@ -1,17 +1,16 @@
 package de.dhbw.dinnerfortwo.impl.person;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
+import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +47,27 @@ public class PersonService {
     }
 
     @Transactional
+    public List<PersonTO> getAllStaff() {
+        log.info("Get all persons");
+
+        List<PersonTO> staffs = new ArrayList<>();
+        List<PersonTO> getAllPersons = ((List<Person>) personRepository.findAll())
+                .stream()
+                .map(Person::toDTO)
+                .collect(Collectors.toList());
+
+        for(PersonTO personTO: getAllPersons){
+            if(personTO.getType() == Type.Staff){
+                if(personTO.getWorkplace() == 0){
+                   staffs.add(personTO);
+                }
+            }
+        }
+        return staffs;
+    }
+
+
+    @Transactional
     public PersonTO create(PersonTO personTO) {
         log.info("Save or update person {}", personTO);
 
@@ -57,8 +77,23 @@ public class PersonService {
         return savedEntity.toDTO();
     }
 
-    public Person getPersonByEmailAndPassword(String email, String password) {
-        return personRepository.getPersonByEmailAndPassword(email, password);
+    public PersonTO getPersonByEmailAndPassword(String email, String password) {
+        Person person = personRepository.getPersonByEmailAndPassword(email, password);
+        return person.toDTO();
+    }
+
+    @Transactional
+    public PersonTO addWorker(Long id, PersonTO personTO) {
+        Optional<Person> person = personRepository.findById(id);
+        if (person.isPresent()) {
+            Person updatedPerson = person.get();
+
+            updatedPerson.setWorkplace(personTO.getWorkplace());
+            updatedPerson = personRepository.save(updatedPerson);
+            return updatedPerson.toDTO();
+        } else {
+            throw new NotFoundException("could not find worker on id {" + id + "}.");
+        }
     }
 
 }

@@ -1,9 +1,5 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
@@ -30,10 +26,8 @@ public class Person {
     @Column(nullable = false)
     private Type type;
 
-    @OneToOne(fetch = FetchType.LAZY,optional = true)
-    @JoinColumn(name = "workplace", referencedColumnName = "id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Restaurants workplace;
+    @Column(nullable = false)
+    private int workplace;
 
     public Person() {
     }
@@ -46,11 +40,11 @@ public class Person {
         this.password = password;
     }
 
-    public Restaurants getWorkplace() {
+    public int getWorkplace() {
         return workplace;
     }
 
-    public void setWorkplace(Restaurants workplace) {
+    public void setWorkplace(int workplace) {
         this.workplace = workplace;
     }
 
@@ -110,25 +104,14 @@ public class Person {
     }
 
     public PersonTO toDTO(){
-
         PersonTO personTO = new PersonTO();
         BeanUtils.copyProperties( this, personTO);
-        if(getWorkplace() != null) {
-            Restaurants restaurants = this.getWorkplace();
-            RestaurantTO resto = restaurants.toDTO();
-            personTO.setWorkplace(resto);
-        }
         return personTO;
     }
 
     public static Person toEntity(PersonTO personTO){
         Person personToEntity = new Person();
         BeanUtils.copyProperties( personTO, personToEntity);
-        if(personTO.getWorkplace() != null) {
-            RestaurantTO restaurantTO = personTO.getWorkplace();
-            Restaurants restaurants = Restaurants.toEntity(restaurantTO);
-            personToEntity.setWorkplace(restaurants);
-        }
         return personToEntity;
     }
 }
