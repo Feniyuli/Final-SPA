@@ -2,6 +2,8 @@ package de.dhbw.dinnerfortwo.impl.restaurants;
 
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 import java.sql.Timestamp;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class RestaurantTO {
     private long id;
@@ -9,22 +11,38 @@ public class RestaurantTO {
     private String name;
     private String address;
     private String description;
-    private Timestamp openTime;
-    private Timestamp closeTime;
+    private String openTime;
+    private String closeTime;
     private String picture;
 
     public RestaurantTO() {
     }
 
-    public RestaurantTO(long id, PersonTO owner, String name, String address, String description, Timestamp openTime, Timestamp closeTime, String picture) {
+    public RestaurantTO(int id, PersonTO owner, String name, String address, String description, LocalTime openTime, LocalTime closeTime, String picture) {
         this.id = id;
         this.owner = owner;
         this.name = name;
         this.address = address;
         this.description = description;
-        this.openTime = openTime;
-        this.closeTime = closeTime;
+        this.openTime = openTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        this.closeTime = closeTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         this.picture = picture;
+    }
+
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
+    }
+
+    public String getCloseTime() {
+        return closeTime;
+    }
+
+    public void setCloseTime(String closeTime) {
+        this.closeTime = closeTime;
     }
 
     public String getPicture() {
@@ -73,21 +91,5 @@ public class RestaurantTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Timestamp getOpenTime() {
-        return openTime;
-    }
-
-    public void setOpenTime(Timestamp openTime) {
-        this.openTime = openTime;
-    }
-
-    public Timestamp getCloseTime() {
-        return closeTime;
-    }
-
-    public void setCloseTime(Timestamp closeTime) {
-        this.closeTime = closeTime;
     }
 }
