@@ -130,6 +130,18 @@ public class RestaurantsController {
         return new ResponseEntity<>(revenue, HttpStatus.OK);
     }
 
+    @GetMapping("/revenueDaily/{id}")
+    public ResponseEntity<Float> getDailyRevenue(@PathVariable long id, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        try {
+            var resto = restaurantsService.getResto(id);
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Not found");
+        }
+        var Dailyrevenue = ordersService.getDailyRevenue(id, date);
+        return new ResponseEntity<>(Dailyrevenue, HttpStatus.OK);
+    }
+
+
     @GetMapping("/availTables/{id}")
     public ResponseEntity<List<TablesTO>> getAvailableTables(@PathVariable("id")Long id, @RequestParam("localDate")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate localDate){

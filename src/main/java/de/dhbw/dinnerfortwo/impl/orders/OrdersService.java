@@ -9,6 +9,9 @@ import org.webjars.NotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,6 +85,25 @@ public class OrdersService {
 
         for(OrdersTO ordersTO: allOrders){
             if (ordersTO.isPaid() == true) {
+                for (OrderedItemsTO orderedItemsTO : ordersTO.getOrderedItems()) {
+                    revenue = revenue + (orderedItemsTO.getItems().getPrice()*orderedItemsTO.getAmount());
+                }
+            }
+        }
+
+        return revenue;
+    }
+
+    @Transactional
+    public float getDailyRevenue(Long id, LocalDate date){
+        List<OrdersTO> allOrders = getAllOrdersByRestaurantId(id);
+        float revenue = 0;
+
+        for(OrdersTO ordersTO: allOrders){
+            Date reservationDate = ordersTO.getReservation().getReservationDate();
+            LocalDate localDate = reservationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            if (ordersTO.isPaid() && localDate.isEqual(date)) {
                 for (OrderedItemsTO orderedItemsTO : ordersTO.getOrderedItems()) {
                     revenue = revenue + (orderedItemsTO.getItems().getPrice()*orderedItemsTO.getAmount());
                 }
