@@ -52,4 +52,9 @@ public class ItemsController {
         log.info("Created item {}", result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        itemsService.delete(id);
+    }
 }

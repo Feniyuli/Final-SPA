@@ -171,4 +171,10 @@ public class OrdersService {
         return savedEntity.toDTO();
     }
 
+    @Transactional
+    public void delete(Long id) {
+        log.info("Deleting order with id {}", id);
+        ordersRepository.deleteById(id);
+    }
+
 }

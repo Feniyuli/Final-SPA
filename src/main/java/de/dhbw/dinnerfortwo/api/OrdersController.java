@@ -89,4 +89,9 @@ public class OrdersController {
         return ResponseEntity.ok(updatedOrder);
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        ordersService.delete(id);
+    }
+
 }

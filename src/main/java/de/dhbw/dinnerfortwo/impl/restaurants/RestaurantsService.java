@@ -62,4 +62,11 @@ public class RestaurantsService {
 
         return getAllResto;
     }
+
+    @Transactional
+    public void delete(Long id) {
+        log.info("Deleting rating with id {}", id);
+        restaurantsRepository.deleteById(id);
+    }
+
 }

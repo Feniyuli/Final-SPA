@@ -63,4 +63,10 @@ public class ItemsService {
 
         return getAllItem;
     }
+
+    @Transactional
+    public void delete(Long id) {
+        log.info("Deleting item with id {}", id);
+        itemsRepository.deleteById(id);
+    }
 }

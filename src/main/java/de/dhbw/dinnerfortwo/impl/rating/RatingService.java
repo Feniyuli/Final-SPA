@@ -81,4 +81,9 @@ public class RatingService {
         return average / number;
     }
 
+    @Transactional
+    public void delete(Long id) {
+        log.info("Deleting rating with id {}", id);
+        ratingRepository.deleteById(id);
+    }
 }

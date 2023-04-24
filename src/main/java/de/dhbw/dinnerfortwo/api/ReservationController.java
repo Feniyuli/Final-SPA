@@ -17,8 +17,6 @@ import java.util.List;
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
 import static de.dhbw.dinnerfortwo.api.ReservationController.URI_RESERVATION_BASE;
 
-//base can't be angepasst?
-
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping(value = URI_RESERVATION_BASE, produces = "application/json;charset=UTF-8")
@@ -76,6 +74,11 @@ public class ReservationController {
     public ResponseEntity<ReservationTO> arrive(@PathVariable Long id) {
         ReservationTO updatedReservation = reservationService.arrive(id);
         return ResponseEntity.ok(updatedReservation);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        reservationService.delete(id);
     }
 
 }

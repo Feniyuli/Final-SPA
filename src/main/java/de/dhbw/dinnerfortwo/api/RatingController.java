@@ -58,5 +58,9 @@ public class RatingController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        ratingService.delete(id);
+    }
 
 }

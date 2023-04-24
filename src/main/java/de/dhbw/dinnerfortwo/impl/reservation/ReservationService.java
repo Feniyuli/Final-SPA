@@ -1,11 +1,4 @@
 package de.dhbw.dinnerfortwo.impl.reservation;
-
-import de.dhbw.dinnerfortwo.impl.orders.Orders;
-import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
-import de.dhbw.dinnerfortwo.impl.person.Person;
-import de.dhbw.dinnerfortwo.impl.person.PersonTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -95,6 +88,12 @@ public class ReservationService {
         } else {
             throw new NotFoundException("could not find reservation with id {" + id + "}.");
         }
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        log.info("Deleting reservation with id {}", id);
+        reservationRepository.deleteById(id);
     }
 
 }

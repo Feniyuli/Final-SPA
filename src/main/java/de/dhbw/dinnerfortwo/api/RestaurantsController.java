@@ -174,4 +174,9 @@ public class RestaurantsController {
         var average = ratingService.getAverageRating(id);
         return new ResponseEntity<>(average, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        restaurantsService.delete(id);
+    }
 }
