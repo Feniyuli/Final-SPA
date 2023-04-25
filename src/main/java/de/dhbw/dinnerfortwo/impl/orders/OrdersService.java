@@ -174,7 +174,11 @@ public class OrdersService {
     @Transactional
     public void delete(Long id) {
         log.info("Deleting order with id {}", id);
-        ordersRepository.deleteById(id);
+        OrdersTO order = getOrder(id);
+
+        if(order.isPaid() == false) {
+            ordersRepository.deleteById(id);
+        }
     }
 
 }
