@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.NotSupportedException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -70,6 +71,9 @@ public class OrdersService {
         Optional<Orders> order = ordersRepository.findById(id);
         if (order.isPresent()) {
             Orders updatedOrder = order.get();
+            if(updatedOrder.isPaid() == true){
+                throw new EntityNotFoundException("paid Already");
+            }
             updatedOrder.setPaid(true);
             updatedOrder = ordersRepository.save(updatedOrder);
             return updatedOrder.toDTO();
@@ -100,10 +104,9 @@ public class OrdersService {
         float revenue = 0;
 
         for(OrdersTO ordersTO: allOrders){
-            Date reservationDate = ordersTO.getReservation().getReservationDate();
-            LocalDate localDate = reservationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate reservationDate = ordersTO.getReservation().getDate();
 
-            if (ordersTO.isPaid() && localDate.isEqual(date)) {
+            if (ordersTO.isPaid() == true && reservationDate.equals(date)) {
                 for (OrderedItemsTO orderedItemsTO : ordersTO.getOrderedItems()) {
                     revenue = revenue + (orderedItemsTO.getItems().getPrice()*orderedItemsTO.getAmount());
                 }
@@ -178,6 +181,8 @@ public class OrdersService {
 
         if(order.isPaid() == false) {
             ordersRepository.deleteById(id);
+        } else {
+            throw new NotFoundException("It is paid, cant be deleted!");
         }
     }
 
