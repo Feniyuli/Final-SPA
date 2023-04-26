@@ -15,6 +15,14 @@ public class OrdersTO {
     public OrdersTO() {
     }
 
+    public OrdersTO(long id, boolean isPaid, ReservationTO reservation, List<OrderedItemsTO> orderedItems, OrderStatus orderStatus) {
+        this.id = id;
+        this.isPaid = isPaid;
+        this.reservation = reservation;
+        this.orderedItems = orderedItems;
+        this.orderStatus = orderStatus;
+    }
+
     public OrderStatus getOrderStatus() {
         return orderStatus;
     }

@@ -34,10 +34,10 @@ public class RatingController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<RatingTO>> getRating(@PathVariable long id) {
+    public ResponseEntity<RatingTO> getRating(@PathVariable long id) {
         log.info("Get rating with id: ", id);
         try {
-            var rating = ratingService.getAllRatings();
+            var rating = ratingService.getRating(id);
             return ResponseEntity.ok(rating);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

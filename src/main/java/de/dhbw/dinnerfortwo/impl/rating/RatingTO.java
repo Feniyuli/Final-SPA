@@ -13,6 +13,14 @@ public class RatingTO {
     public RatingTO(){
     }
 
+    public RatingTO(long id, int rating, String comment, PersonTO person, RestaurantTO restaurants) {
+        this.id = id;
+        this.rating = rating;
+        this.comment = comment;
+        this.person = person;
+        this.restaurants = restaurants;
+    }
+
     public String getComment() {
         return comment;
     }
@@ -52,10 +60,5 @@ public class RatingTO {
     public void setRestaurants(RestaurantTO restaurants) {
         this.restaurants = restaurants;
     }
-
-
-
-
-
 
 }

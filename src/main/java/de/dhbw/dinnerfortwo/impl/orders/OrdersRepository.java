@@ -1,6 +1,5 @@
 package de.dhbw.dinnerfortwo.impl.orders;
 
-import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

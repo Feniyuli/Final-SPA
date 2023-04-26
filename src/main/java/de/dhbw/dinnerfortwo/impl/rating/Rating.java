@@ -1,16 +1,10 @@
 package de.dhbw.dinnerfortwo.impl.rating;
 
-
 import de.dhbw.dinnerfortwo.impl.person.Person;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
-import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
-import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
-import de.dhbw.dinnerfortwo.impl.table.Tables;
-import de.dhbw.dinnerfortwo.impl.table.TablesTO;
 import org.springframework.beans.BeanUtils;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -19,17 +13,30 @@ public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(nullable = false)
     private int rating;
+
+    @Column(nullable = true)
     private String comment;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "restaurants", referencedColumnName = "id")
     private Restaurants restaurants;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "guest", referencedColumnName = "id")
     private Person person;
 
     public Rating(){
+    }
+
+    public Rating(long id, int rating, String comment, Restaurants restaurants, Person person) {
+        this.id = id;
+        this.rating = rating;
+        this.comment = comment;
+        this.restaurants = restaurants;
+        this.person = person;
     }
 
     public String getComment() {
@@ -89,6 +96,7 @@ public class Rating {
 
         RatingTO ratingTO = new RatingTO();
         BeanUtils.copyProperties( this, ratingTO);
+
         Restaurants restaurants = this.getRestaurants();
         RestaurantTO restaurantTO = restaurants.toDTO();
 
@@ -97,7 +105,6 @@ public class Rating {
 
         ratingTO.setRestaurants(restaurantTO);
         ratingTO.setPerson(personTO);
-
         return ratingTO;
     }
 
@@ -113,7 +120,6 @@ public class Rating {
 
         ratingToEntity.setRestaurants(restaurants);
         ratingToEntity.setPerson(person);
-
         return ratingToEntity;
     }
 

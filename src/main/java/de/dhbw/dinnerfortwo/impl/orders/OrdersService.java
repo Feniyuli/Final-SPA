@@ -1,18 +1,13 @@
 package de.dhbw.dinnerfortwo.impl.orders;
 
-
 import de.dhbw.dinnerfortwo.impl.ordereditems.OrderedItemsTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
-
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.NotSupportedException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +19,6 @@ public class OrdersService {
     public OrdersService(OrdersRepository ordersRepository) {
         this.ordersRepository = ordersRepository;
     }
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Transactional
@@ -48,7 +42,7 @@ public class OrdersService {
     }
     @Transactional
     public OrdersTO create(OrdersTO ordersTO) {
-        log.info("Save or update order {}", ordersTO);
+        log.info("Save order {}", ordersTO);
 
         Orders ordersToEntity = Orders.toEntity(ordersTO);
         Orders savedEntity = ordersRepository.save(ordersToEntity);
@@ -72,7 +66,7 @@ public class OrdersService {
         if (order.isPresent()) {
             Orders updatedOrder = order.get();
             if(updatedOrder.isPaid() == true){
-                throw new EntityNotFoundException("paid Already");
+                throw new IllegalStateException("paid Already");
             }
             updatedOrder.setPaid(true);
             updatedOrder = ordersRepository.save(updatedOrder);
@@ -140,7 +134,7 @@ public class OrdersService {
 
     @Transactional
     public OrdersTO onProcess (Long id){
-        Orders ordersById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
+        Orders orderById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
         OrdersTO order = getOrder(id);
         if(order.getOrderStatus() == OrderStatus.Open){
             order.setOrderStatus(OrderStatus.OnProcess);
@@ -152,7 +146,7 @@ public class OrdersService {
 
     @Transactional
     public OrdersTO ready (Long id){
-        Orders ordersById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
+        Orders orderById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
         OrdersTO order = getOrder(id);
         if(order.getOrderStatus() == OrderStatus.OnProcess){
             order.setOrderStatus(OrderStatus.Ready);
@@ -164,7 +158,7 @@ public class OrdersService {
 
     @Transactional
     public OrdersTO delivered (Long id){
-        Orders ordersById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
+        Orders orderById = ordersRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find order with Id " + id));
         OrdersTO order = getOrder(id);
         if(order.getOrderStatus() == OrderStatus.Ready){
             order.setOrderStatus(OrderStatus.Delivered);
@@ -182,7 +176,7 @@ public class OrdersService {
         if(order.isPaid() == false) {
             ordersRepository.deleteById(id);
         } else {
-            throw new NotFoundException("It is paid, cant be deleted!");
+            throw new IllegalStateException("It is paid, cant be deleted!");
         }
     }
 

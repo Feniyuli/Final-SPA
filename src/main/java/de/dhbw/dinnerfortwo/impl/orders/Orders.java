@@ -17,18 +17,30 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(nullable = false)
     private boolean isPaid;
+
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "reservation", referencedColumnName = "id")
     private Reservation reservation;
+
     @OneToMany(targetEntity = OrderedItems.class, fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
     @JoinColumn(name = "orderedItems", referencedColumnName = "id")
     private List<OrderedItems> orderedItems;
+
     @Column(nullable = false)
     private OrderStatus orderStatus;
 
     public Orders() {
+    }
+
+    public Orders(long id, boolean isPaid, Reservation reservation, List<OrderedItems> orderedItems, OrderStatus orderStatus) {
+        this.id = id;
+        this.isPaid = isPaid;
+        this.reservation = reservation;
+        this.orderedItems = orderedItems;
+        this.orderStatus = orderStatus;
     }
 
     public OrderStatus getOrderStatus() {
@@ -47,7 +59,6 @@ public class Orders {
         this.id = id;
     }
 
-
     public boolean isPaid() {
         return isPaid;
     }
@@ -55,7 +66,6 @@ public class Orders {
     public void setPaid(boolean paid) {
         isPaid = paid;
     }
-
 
     public List<OrderedItems> getOrderedItems() {
         return orderedItems;

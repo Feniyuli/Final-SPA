@@ -1,7 +1,6 @@
 package de.dhbw.dinnerfortwo.impl.person;
 
 import org.springframework.beans.BeanUtils;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -87,8 +86,6 @@ public class Person {
     public void setType(Type type) {
         this.type = type;
     }
-
-    // equals and hash code must be based on the ID for JPA to work well.
 
     @Override
     public boolean equals(Object o) {

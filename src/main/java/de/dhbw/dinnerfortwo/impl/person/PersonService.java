@@ -1,6 +1,5 @@
 package de.dhbw.dinnerfortwo.impl.person;
-import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,13 +41,12 @@ public class PersonService {
                 .map(Person::toDTO)
                 .collect(Collectors.toList());;
 
-
         return getAllPersons;
     }
 
     @Transactional
     public List<PersonTO> getAllStaff() {
-        log.info("Get all persons");
+        log.info("Get all Staffs");
 
         List<PersonTO> staffs = new ArrayList<>();
         List<PersonTO> getAllPersons = ((List<Person>) personRepository.findAll())
@@ -69,7 +67,7 @@ public class PersonService {
 
     @Transactional
     public PersonTO create(PersonTO personTO) {
-        log.info("Save or update person {}", personTO);
+        log.info("Save person: ", personTO);
 
         Person person = Person.toEntity(personTO);
         Person savedEntity = personRepository.save(person);
@@ -77,6 +75,7 @@ public class PersonService {
         return savedEntity.toDTO();
     }
 
+    @Transactional
     public PersonTO getPersonByEmailAndPassword(String email, String password) {
         Person person = personRepository.getPersonByEmailAndPassword(email, password);
         return person.toDTO();
@@ -92,7 +91,7 @@ public class PersonService {
             updatedPerson = personRepository.save(updatedPerson);
             return updatedPerson.toDTO();
         } else {
-            throw new NotFoundException("could not find worker on id {" + id + "}.");
+            throw new NotFoundException("could not find staff on id {" + id + "}.");
         }
     }
 

@@ -14,8 +14,10 @@ public class OrderedItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
+
     @Column(nullable = false)
     private int amount;
+
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "items", referencedColumnName = "id")
     private Items items;
