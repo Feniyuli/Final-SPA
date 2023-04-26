@@ -15,6 +15,10 @@ import java.util.List;
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
 import static de.dhbw.dinnerfortwo.api.TablesController.URI_TABLES_BASE;
 
+/**
+ * REST (HTTP) API of the Dinner app to interact with the UI or external applications.
+ * The REST API provides the CRUD operations to create, read, update or delete a table
+ */
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping(value = URI_TABLES_BASE, produces = "application/json;charset=UTF-8")

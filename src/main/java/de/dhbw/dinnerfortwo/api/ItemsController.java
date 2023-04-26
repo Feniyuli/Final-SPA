@@ -2,7 +2,6 @@ package de.dhbw.dinnerfortwo.api;
 
 import de.dhbw.dinnerfortwo.impl.item.ItemsService;
 import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,10 @@ import java.util.List;
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
 import static de.dhbw.dinnerfortwo.api.ItemsController.URI_ITEMS_BASE;
 
+/**
+ * REST (HTTP) API of the Dinner app to interact with the UI or external applications.
+ * The REST API provides the CRUD operations to create, read, update or delete an item
+ */
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping(value = URI_ITEMS_BASE, produces = "application/json;charset=UTF-8")
@@ -56,5 +59,6 @@ public class ItemsController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         itemsService.delete(id);
+        log.info("Delete item with id:", id);
     }
 }

@@ -83,7 +83,7 @@ public class PersonService {
     }
 
     @Transactional
-    public PersonTO addWorker(Long id, PersonTO personTO) {
+    public PersonTO addStaff(Long id, PersonTO personTO) {
         Optional<Person> person = personRepository.findById(id);
         if (person.isPresent()) {
             Person updatedPerson = person.get();

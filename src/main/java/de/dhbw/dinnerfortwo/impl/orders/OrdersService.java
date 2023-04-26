@@ -67,7 +67,7 @@ public class OrdersService {
     }
 
     @Transactional
-    public OrdersTO updateOrderIsPaid(Long id) {
+    public OrdersTO payOrder(Long id) {
         Optional<Orders> order = ordersRepository.findById(id);
         if (order.isPresent()) {
             Orders updatedOrder = order.get();
@@ -117,7 +117,7 @@ public class OrdersService {
     }
 
     @Transactional
-    public float getTotalOrder(long id){
+    public float getTotalPrice(long id){
         OrdersTO orders = getOrder(id);
         List<OrderedItemsTO> orderedItems = orders.getOrderedItems();
         float amount = 0;

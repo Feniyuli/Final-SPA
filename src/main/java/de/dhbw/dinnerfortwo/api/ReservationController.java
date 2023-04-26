@@ -17,6 +17,10 @@ import java.util.List;
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
 import static de.dhbw.dinnerfortwo.api.ReservationController.URI_RESERVATION_BASE;
 
+/**
+ * REST (HTTP) API of the Dinner app to interact with the UI or external applications.
+ * The REST API provides the CRUD operations to create, read, update or delete a reservation
+ */
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping(value = URI_RESERVATION_BASE, produces = "application/json;charset=UTF-8")
@@ -25,7 +29,6 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final OrdersService ordersService;
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ReservationController(ReservationService reservationService, OrdersService ordersService) {
@@ -35,8 +38,8 @@ public class ReservationController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservationTO> getAllRes(@PathVariable long id) {
-        log.info("Get reservation with id {}", id);
+    public ResponseEntity<ReservationTO> getReservation(@PathVariable long id) {
+        log.info("Get reservation with id: ", id);
         try {
             var reservations = reservationService.getRes(id);
             return ResponseEntity.ok(reservations);
@@ -46,7 +49,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTO>> getAllRes() {
+    public ResponseEntity<List<ReservationTO>> getAllReservation() {
         log.info("Get all reservations");
         var result = reservationService.getAllRes();
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -61,7 +64,7 @@ public class ReservationController {
 
     @GetMapping("/order/{id}")
     public ResponseEntity<List<OrdersTO>> getOrderReserved(@PathVariable long id) {
-        log.info("Get order with id {}", id);
+        log.info("Get all order in a reservation with id: ", id);
         try {
             var orders = ordersService.getOrderReserved(id);
             return ResponseEntity.ok(orders);
@@ -71,13 +74,13 @@ public class ReservationController {
     }
 
     @PutMapping("arrive/{id}")
-    public ResponseEntity<ReservationTO> arrive(@PathVariable Long id) {
-        ReservationTO updatedReservation = reservationService.arrive(id);
+    public ResponseEntity<ReservationTO> guestArrived(@PathVariable Long id) {
+        ReservationTO updatedReservation = reservationService.guestArrived(id);
         return ResponseEntity.ok(updatedReservation);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void deleteReservation(@PathVariable Long id) {
         reservationService.delete(id);
     }
 

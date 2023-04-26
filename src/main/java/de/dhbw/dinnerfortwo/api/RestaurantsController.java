@@ -25,6 +25,10 @@ import java.util.List;
 import static de.dhbw.dinnerfortwo.api.MetaInfo.URI_BASE;
 import static de.dhbw.dinnerfortwo.api.RestaurantsController.URI_RESTAURANTS_BASE;
 
+/**
+ * REST (HTTP) API of the Dinner app to interact with the UI or external applications.
+ * The REST API provides the CRUD operations to create, read, update or delete a restaurant
+ */
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping(value = URI_RESTAURANTS_BASE, produces = "application/json;charset=UTF-8")
@@ -37,8 +41,6 @@ public class RestaurantsController {
     private final OrdersService ordersService;
     private final TablesService tablesService;
     private final RatingService ratingService;
-
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public RestaurantsController(RestaurantsService restaurantsService, ItemsService itemsService, ReservationService reservationService, OrdersService ordersService, TablesService tablesService, RatingService ratingService) {
@@ -51,7 +53,7 @@ public class RestaurantsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantTO> getResto(@PathVariable long id) {
+    public ResponseEntity<RestaurantTO> getRestaurant(@PathVariable long id) {
         log.info("Get Restaurants with id {}", id);
         try {
             var resto = restaurantsService.getResto(id);
@@ -62,14 +64,14 @@ public class RestaurantsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RestaurantTO>> getAllResto() {
+    public ResponseEntity<List<RestaurantTO>> getAllRestaurant() {
         log.info("Get all restaurants");
         var result = restaurantsService.getAllResto();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<RestaurantTO> createResto(@RequestBody RestaurantTO newRestaurants) {
+    public ResponseEntity<RestaurantTO> createRestaurant(@RequestBody RestaurantTO newRestaurants) {
         RestaurantTO result = restaurantsService.create(newRestaurants);
         log.info("Created restaurants {}", result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -85,10 +87,10 @@ public class RestaurantsController {
             return ResponseEntity.notFound().build();
         }
     }
-    // RestaraurantId != GuestId!
+
     @GetMapping("/reservation/{id}")
     public ResponseEntity<List<ReservationTO>> getAllReservationByRestaurantId(@PathVariable("id")Long id) {
-        log.info("Get reservation with id {}");
+        log.info("Get All Reservation in a Restaurant");
         try {
             var reservations = reservationService.getAllReservationByRestaurantId(id);
             return ResponseEntity.ok(reservations);
@@ -99,7 +101,7 @@ public class RestaurantsController {
 
     @GetMapping("/orders/{id}")
     public ResponseEntity<List<OrdersTO>> getAllOrderByRestaurantId(@PathVariable("id")Long id) {
-        log.info("Get all orders with restaurant id {}");
+        log.info("Get all orders in a restaurant");
         try {
             var orders = ordersService.getAllOrdersByRestaurantId(id);
             return ResponseEntity.ok(orders);
@@ -110,7 +112,7 @@ public class RestaurantsController {
 
     @GetMapping("/tables/{id}")
     public ResponseEntity<List<TablesTO>> getAllTablesByRestaurantId(@PathVariable("id")Long id) {
-        log.info("Get tables with id {}");
+        log.info("Get all tables in a restaurant");
         try {
             var tablesByRestaurantId = tablesService.getTablesByRestaurantId(id);
             return ResponseEntity.ok(tablesByRestaurantId);
@@ -122,7 +124,7 @@ public class RestaurantsController {
     @GetMapping("/revenue/{id}")
     public ResponseEntity<Float> getRevenue(@PathVariable long id){
         try {
-            var resto = restaurantsService.getResto(id);
+            var restaurant = restaurantsService.getResto(id);
         } catch (EntityNotFoundException e) {
             throw new EntityNotFoundException("Not found");
         }
@@ -133,7 +135,7 @@ public class RestaurantsController {
     @GetMapping("/revenueDaily/{id}")
     public ResponseEntity<Float> getDailyRevenue(@PathVariable long id, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         try {
-            var resto = restaurantsService.getResto(id);
+            var restaurant = restaurantsService.getResto(id);
         } catch (EntityNotFoundException e) {
             throw new EntityNotFoundException("Not found");
         }
@@ -145,7 +147,7 @@ public class RestaurantsController {
     @GetMapping("/availTables/{id}")
     public ResponseEntity<List<TablesTO>> getAvailableTables(@PathVariable("id")Long id, @RequestParam("localDate")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate localDate){
-        log.info("Get available tables with id {}");
+        log.info("Get available tables in a restaurant");
         try {
             var tablesByRestaurantId = tablesService.getAvailableTables(id, localDate);
             return ResponseEntity.ok(tablesByRestaurantId);
@@ -176,7 +178,7 @@ public class RestaurantsController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void deleteRestaurant(@PathVariable Long id) {
         restaurantsService.delete(id);
     }
 }

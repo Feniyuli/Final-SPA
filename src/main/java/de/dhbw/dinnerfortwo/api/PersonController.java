@@ -5,7 +5,6 @@ import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantsService;
-import de.dhbw.dinnerfortwo.impl.table.TablesTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ import static de.dhbw.dinnerfortwo.api.PersonController.URI_OWNER_BASE;
 
 /**
  * REST (HTTP) API of the Dinner app to interact with the UI or external applications.
- * The REST API provides the CRUD operations to create, read, update or delete a restaurant.
+ * The REST API provides the CRUD operations to create, read, update or delete a person
  */
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -29,7 +28,6 @@ import static de.dhbw.dinnerfortwo.api.PersonController.URI_OWNER_BASE;
 public class PersonController {
 
     public static final String URI_OWNER_BASE = URI_BASE + "/persons";
-
     private final PersonService personService;
     private final ReservationService reservationService;
     private final RestaurantsService restaurantsService;
@@ -44,7 +42,7 @@ public class PersonController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PersonTO> getPerson(@PathVariable long id) {
-        log.info("Get person with id {}", id);
+        log.info("Get person with id: ", id);
         try {
             var person = personService.getPerson(id);
             return ResponseEntity.ok(person);
@@ -62,7 +60,7 @@ public class PersonController {
 
     @GetMapping("/staffs")
     public ResponseEntity<List<PersonTO>> getAllStaff() {
-        log.info("Get all Staff");
+        log.info("Get all Staffs");
         var result = personService.getAllStaff();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -70,7 +68,7 @@ public class PersonController {
     @PostMapping
     public ResponseEntity<PersonTO> createPerson(@RequestBody PersonTO newPerson) {
         PersonTO result = personService.create(newPerson);
-        log.info("Created person {}", result);
+        log.info("Created person:", result);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -112,9 +110,9 @@ public class PersonController {
     }
 
     @PutMapping("/addWorker/{id}")
-    public ResponseEntity<PersonTO> addWorker(@PathVariable Long id, @RequestBody PersonTO personTO) {
-        PersonTO result = personService.addWorker(id, personTO);
-        log.info("updated person {}", result);
+    public ResponseEntity<PersonTO> addStaff(@PathVariable Long id, @RequestBody PersonTO personTO) {
+        PersonTO result = personService.addStaff(id, personTO);
+        log.info("updated person", result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -78,7 +78,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationTO arrive (Long id) {
+    public ReservationTO guestArrived (Long id) {
         Optional<Reservation> reservation = reservationRepository.findById(id);
         if (reservation.isPresent()) {
             Reservation updatedReservation = reservation.get();
