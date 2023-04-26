@@ -1,10 +1,8 @@
 package de.dhbw.dinnerfortwo.impl.table;
 
-//import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
 import org.springframework.beans.BeanUtils;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -13,15 +11,25 @@ public class Tables {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(nullable = false)
     private int capacity;
+
     @Column(nullable = false)
     private int tableNumber;
+
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "restaurant", referencedColumnName = "id")
     private Restaurants restaurants;
 
     public Tables() {
+    }
+
+    public Tables(long id, int capacity, int tableNumber, Restaurants restaurants) {
+        this.id = id;
+        this.capacity = capacity;
+        this.tableNumber = tableNumber;
+        this.restaurants = restaurants;
     }
 
     public int getTableNumber() {
@@ -70,9 +78,9 @@ public class Tables {
     }
 
     public de.dhbw.dinnerfortwo.impl.table.TablesTO toDTO(){
-
         de.dhbw.dinnerfortwo.impl.table.TablesTO tablesTO = new de.dhbw.dinnerfortwo.impl.table.TablesTO();
         BeanUtils.copyProperties( this, tablesTO);
+
         Restaurants restaurants = this.getRestaurants();
         RestaurantTO restaurantTO = restaurants.toDTO();
 
@@ -83,11 +91,11 @@ public class Tables {
     public static Tables toEntity(TablesTO tablesTO){
         Tables tablesToEntity = new Tables();
         BeanUtils.copyProperties(tablesTO, tablesToEntity);
+
         RestaurantTO restaurantTO = tablesTO.getRestaurants();
         Restaurants restaurants = Restaurants.toEntity(restaurantTO);
 
         tablesToEntity.setRestaurants(restaurants);
-
         return tablesToEntity;
     }
 }

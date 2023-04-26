@@ -11,6 +11,13 @@ public class TablesTO {
     public TablesTO() {
     }
 
+    public TablesTO(long id, int capacity, int tableNumber, RestaurantTO restaurants) {
+        this.id = id;
+        this.capacity = capacity;
+        this.tableNumber = tableNumber;
+        this.restaurants = restaurants;
+    }
+
     public int getTableNumber() {
         return tableNumber;
     }

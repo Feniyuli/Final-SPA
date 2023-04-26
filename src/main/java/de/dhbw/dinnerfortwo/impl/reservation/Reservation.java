@@ -1,17 +1,13 @@
 package de.dhbw.dinnerfortwo.impl.reservation;
 
-
 import de.dhbw.dinnerfortwo.impl.person.Person;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 import de.dhbw.dinnerfortwo.impl.table.Tables;
 import de.dhbw.dinnerfortwo.impl.table.TablesTO;
 import org.springframework.beans.BeanUtils;
-
 import javax.persistence.*;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -20,14 +16,19 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(nullable = false)
     private boolean arrive;
+
     @Column(nullable = false)
     private LocalDate date;
+
     @Column(name = "fromTime", nullable = false)
     private Timestamp fromTime;
+
     @Column(name = "toTime", nullable = false)
     private Timestamp toTime;
+
     @Column(nullable = false)
     private Date reservationDate;
 
@@ -39,8 +40,18 @@ public class Reservation {
     @JoinColumn(name = "tableReserved", referencedColumnName = "id")
     private Tables table;
 
-
     public Reservation (){
+    }
+
+    public Reservation(long id, boolean arrive, LocalDate date, Timestamp fromTime, Timestamp toTime, Date reservationDate, Person person, Tables table) {
+        this.id = id;
+        this.arrive = arrive;
+        this.date = date;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.reservationDate = reservationDate;
+        this.person = person;
+        this.table = table;
     }
 
     public Timestamp getFromTime() {
@@ -121,9 +132,9 @@ public class Reservation {
     }
 
     public ReservationTO toDTO(){
-
         ReservationTO reservationTO = new ReservationTO();
         BeanUtils.copyProperties( this, reservationTO);
+
         Person person = this.getPerson();
         PersonTO personTO = person.toDTO();
 
@@ -138,6 +149,7 @@ public class Reservation {
     public static Reservation toEntity(ReservationTO reservationTO){
         Reservation reservationToEntity = new Reservation();
         BeanUtils.copyProperties(reservationTO, reservationToEntity);
+
         PersonTO personTO = reservationTO.getPerson();
         Person person = Person.toEntity(personTO);
 
@@ -146,9 +158,7 @@ public class Reservation {
 
         reservationToEntity.setPerson(person);
         reservationToEntity.setTable(tables);
-
         return reservationToEntity;
 
     }
-
 }

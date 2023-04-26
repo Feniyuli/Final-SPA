@@ -1,9 +1,9 @@
 package de.dhbw.dinnerfortwo.impl.reservation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
-
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ReservationService {
 
 
     @Transactional
-    public ReservationTO getRes(long id){
+    public ReservationTO getReservation(long id){
         log.info("Looking for a reservation  with id {}", id);
         Reservation reservationById = reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find reservation with Id " + id));
 
@@ -33,9 +33,8 @@ public class ReservationService {
         return getResById;
     }
 
-
     @Transactional
-    public List<ReservationTO> getAllRes() {
+    public List<ReservationTO> getAllReservation() {
         log.info("Get all reservations");
         List<ReservationTO> getAllRes = ((List<Reservation>) reservationRepository.findAll())
                 .stream()

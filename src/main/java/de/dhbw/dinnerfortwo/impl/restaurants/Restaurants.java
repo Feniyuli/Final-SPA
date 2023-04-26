@@ -3,9 +3,7 @@ package de.dhbw.dinnerfortwo.impl.restaurants;
 import de.dhbw.dinnerfortwo.impl.person.Person;
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
 import org.springframework.beans.BeanUtils;
-
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -136,8 +134,6 @@ public class Restaurants {
         return closeTime.format(TIME_FORMATTER);
     }
 
-    // equals and hash code must be based on the ID for JPA to work well.
-
 
     @Override
     public boolean equals(Object o) {
@@ -156,11 +152,12 @@ public class Restaurants {
 
         RestaurantTO restaurantTO = new RestaurantTO();
         BeanUtils.copyProperties( this, restaurantTO);
+
         Person person = this.getOwner();
         PersonTO personTO = person.toDTO();
+
         restaurantTO.setCloseTime(this.getFormattedCloseTime());
         restaurantTO.setOpenTime(this.getFormattedOpenTime());
-
         restaurantTO.setOwner(personTO);
         return restaurantTO;
     }
@@ -168,15 +165,16 @@ public class Restaurants {
     public static Restaurants toEntity(RestaurantTO restaurantTO){
         Restaurants restaurantsToEntity = new Restaurants();
         BeanUtils.copyProperties(restaurantTO, restaurantsToEntity);
+
         PersonTO personTO = restaurantTO.getOwner();
         Person person = Person.toEntity(personTO);
+
         LocalTime open = parseLocalTime(restaurantTO.getOpenTime());
         LocalTime close = parseLocalTime(restaurantTO.getCloseTime());
 
         restaurantsToEntity.setOpenTime(open);
         restaurantsToEntity.setCloseTime(close);
         restaurantsToEntity.setOwner(person);
-
         return restaurantsToEntity;
     }
 }

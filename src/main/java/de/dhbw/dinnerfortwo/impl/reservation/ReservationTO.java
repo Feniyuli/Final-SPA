@@ -1,13 +1,9 @@
 package de.dhbw.dinnerfortwo.impl.reservation;
 
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
-import de.dhbw.dinnerfortwo.impl.table.Tables;
 import de.dhbw.dinnerfortwo.impl.table.TablesTO;
-
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Date;
 
 public class ReservationTO {
@@ -21,6 +17,17 @@ public class ReservationTO {
     private Date reservationDate;
 
     public ReservationTO(){
+    }
+
+    public ReservationTO(long id, PersonTO person, TablesTO table, boolean arrive, LocalDate date, Timestamp fromTime, Timestamp toTime, Date reservationDate) {
+        this.id = id;
+        this.person = person;
+        this.table = table;
+        this.arrive = arrive;
+        this.date = date;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.reservationDate = reservationDate;
     }
 
     public Timestamp getFromTime() {

@@ -17,7 +17,7 @@ public class Rating {
     @Column(nullable = false)
     private int rating;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

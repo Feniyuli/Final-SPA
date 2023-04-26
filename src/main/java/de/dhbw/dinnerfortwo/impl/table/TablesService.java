@@ -1,16 +1,10 @@
 package de.dhbw.dinnerfortwo.impl.table;
 
-import de.dhbw.dinnerfortwo.impl.orders.OrderStatus;
-import de.dhbw.dinnerfortwo.impl.orders.Orders;
-import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
-import de.dhbw.dinnerfortwo.impl.reservation.ReservationRepository;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationService;
 import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -37,9 +31,9 @@ public class TablesService {
         Tables TablesById = tablesRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find table with Id " + id));
 
         TablesTO getTablesById = TablesById.toDTO();
-
         return getTablesById;
     }
+
     @Transactional
     public List<TablesTO> getAllTables() {
         log.info("Get all Tables");
@@ -52,7 +46,7 @@ public class TablesService {
     }
     @Transactional
     public TablesTO create(TablesTO tablesTO) {
-        log.info("Save or update Tables {}", tablesTO);
+        log.info("Save Tables {}", tablesTO);
 
         Tables tablesToEntity = Tables.toEntity(tablesTO);
         Tables savedEntity = tablesRepository.save(tablesToEntity);
@@ -62,7 +56,7 @@ public class TablesService {
 
     @Transactional
     public List<TablesTO> getTablesByRestaurantId(Long id) {
-        log.info("Get all Items by Restaurant Id");
+        log.info("Get all Tables in Restaurant");
         List<TablesTO> getAllTables = ((List<Tables>) tablesRepository.findAllTablesByRestaurantId(id))
                 .stream()
                 .map(Tables::toDTO)
@@ -101,7 +95,6 @@ public class TablesService {
         Tables tableEntity = tablesRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Could not find table"));
         tableEntity.setTableNumber(tablesTO.getTableNumber());
         tableEntity.setCapacity(tablesTO.getCapacity());
-
         Tables savedEntity = tablesRepository.save(tableEntity);
         return savedEntity.toDTO();
     }

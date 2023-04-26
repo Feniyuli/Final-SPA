@@ -41,7 +41,7 @@ public class ReservationController {
     public ResponseEntity<ReservationTO> getReservation(@PathVariable long id) {
         log.info("Get reservation with id: ", id);
         try {
-            var reservations = reservationService.getRes(id);
+            var reservations = reservationService.getReservation(id);
             return ResponseEntity.ok(reservations);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -51,7 +51,7 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationTO>> getAllReservation() {
         log.info("Get all reservations");
-        var result = reservationService.getAllRes();
+        var result = reservationService.getAllReservation();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

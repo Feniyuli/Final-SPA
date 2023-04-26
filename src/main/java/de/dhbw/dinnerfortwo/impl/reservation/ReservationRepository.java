@@ -1,12 +1,9 @@
 package de.dhbw.dinnerfortwo.impl.reservation;
 
-import de.dhbw.dinnerfortwo.impl.person.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-
 
 /**
  * The repository is responsible to interact with the database.
@@ -27,7 +24,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
       WHERE u.restaurants.id = :id\s
       """)
     List<Reservation> findAllReservationByRestaurantId(Long id);
-
-
-
 }

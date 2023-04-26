@@ -1,7 +1,6 @@
 package de.dhbw.dinnerfortwo.impl.restaurants;
 
 import de.dhbw.dinnerfortwo.impl.person.PersonTO;
-import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
