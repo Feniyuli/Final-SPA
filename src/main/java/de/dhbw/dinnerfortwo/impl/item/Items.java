@@ -2,7 +2,6 @@ package de.dhbw.dinnerfortwo.impl.item;
 
 import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
 import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
-import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;

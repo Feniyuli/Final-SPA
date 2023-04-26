@@ -1,10 +1,5 @@
 package de.dhbw.dinnerfortwo.impl.item;
 
-import de.dhbw.dinnerfortwo.impl.reservation.Reservation;
-import de.dhbw.dinnerfortwo.impl.reservation.ReservationTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.RestaurantTO;
-import de.dhbw.dinnerfortwo.impl.restaurants.Restaurants;
-import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,7 +16,6 @@ public class ItemsService {
     public ItemsService(ItemsRepository itemsRepository) {
         this.itemsRepository = itemsRepository;
     }
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Transactional
@@ -45,7 +39,7 @@ public class ItemsService {
     }
     @Transactional
     public ItemsTO create(ItemsTO itemsTO) {
-        log.info("Save or update Items {}", itemsTO);
+        log.info("create item: ", itemsTO);
 
         Items itemsToEntity = Items.toEntity(itemsTO);
         Items savedEntity = itemsRepository.save(itemsToEntity);
@@ -55,7 +49,7 @@ public class ItemsService {
 
     @Transactional
     public List<ItemsTO> getAllItemByRestaurantId(Long id) {
-        log.info("Get all Items by Restaurant Id");
+        log.info("Get all Items in a Restaurant");
         List<ItemsTO> getAllItem = ((List<Items>) itemsRepository.findAllItemsByRestaurantId(id))
                 .stream()
                 .map(Items::toDTO)

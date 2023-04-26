@@ -2,7 +2,6 @@ package de.dhbw.dinnerfortwo.impl.ordereditems;
 
 import de.dhbw.dinnerfortwo.impl.item.Items;
 import de.dhbw.dinnerfortwo.impl.orders.Orders;
-import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
 import org.springframework.beans.BeanUtils;
 
@@ -68,7 +67,6 @@ public class OrderedItems {
     }
 
     public OrderedItemsTO toDTO(){
-
         OrderedItemsTO orderedItemsTO = new OrderedItemsTO();
         BeanUtils.copyProperties( this, orderedItemsTO);
         Items items = this.getItems();

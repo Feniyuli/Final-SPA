@@ -1,6 +1,5 @@
 package de.dhbw.dinnerfortwo.impl.ordereditems;
 
-import de.dhbw.dinnerfortwo.impl.orders.OrdersTO;
 import de.dhbw.dinnerfortwo.impl.item.ItemsTO;
 
 public class OrderedItemsTO {
