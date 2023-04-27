@@ -10,8 +10,15 @@ import org.springframework.web.servlet.view.RedirectView
  */
 @Controller
 class HomeController {
-    @GetMapping("/")
+    @GetMapping("/docs")
     fun home(): RedirectView {
         return RedirectView("/swagger-ui.html")
     }
+
+    @GetMapping("/{path:[^\\.]*}")
+    fun getIndex(): String? {
+        return "index.html"
+    }
+
+
 }
