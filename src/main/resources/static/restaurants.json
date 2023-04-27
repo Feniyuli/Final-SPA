@@ -1,0 +1,30 @@
+[
+  {
+    "id": "b2a2b0e3-3f5e-4a38-bbc8-7a6b2edf5e5f",
+    "name": "The Spicy Affair",
+    "cuisine": "Indian",
+    "email": "thespicyaffair@restaurant.com",
+    "rating": 4.5
+  },
+  {
+    "id": "7a6a2c9f-0fc2-43eb-b83b-1c49b7c3a3f3",
+    "name": "Taste of Japan",
+    "cuisine": "Japanese",
+    "email": "tasteofjapan@restaurant.com",
+    "rating": 4.2
+  },
+  {
+    "id": "3610e71e-5857-4f9c-9656-1bceac7c6f2d",
+    "name": "China Town",
+    "cuisine": "Chinese",
+    "email": "chinatown@restaurant.com",
+    "rating": 4.7
+  },
+  {
+    "id": "f92a24eb-2d44-4ff6-b4c5-4dda77e6a73f",
+    "name": "La Pizzeria",
+    "cuisine": "Italian",
+    "email": "lapizzeria@restaurant.com",
+    "rating": 4.3
+  }
+]
